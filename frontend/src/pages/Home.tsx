@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Sidebar from '../components/Sidebar';
 import '../styles/sidebar.css';
 
-// Import your content components
 import Dashboard from './Dashboard';
 import Learn from './Learn';
 import Simulation from './Simulation';
@@ -31,12 +30,13 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar with internal state change */}
       <Sidebar onTabChange={setActiveTab} activeTab={activeTab} />
 
       <div className="page-container flex-1">
         <div className="card text-center max-w-xl mx-auto my-24">
-          {renderContent()}
+          <div key={activeTab} className="content-fade">
+            {renderContent()}
+          </div>
         </div>
       </div>
     </div>

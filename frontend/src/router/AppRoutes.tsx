@@ -10,6 +10,7 @@ import Simulation from "../pages/Simulation";
 import Forum      from "../pages/Forum";
 import Events     from "../pages/Events";
 import NotFound   from "../pages/NotFound";
+import ConfirmSignup from "../pages/ConfirmSignUp";
 
 export default function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ export default function AppRoutes() {
       <Route path="/events"     element={<Events />} />
       <Route path="/login"      element={<Login />} />
       <Route path="/signup"     element={<Signup />} />
+      <Route path="/confirm" element={<ConfirmSignup />} />
       <Route path="*"           element={<NotFound />} />
     </Routes>
   );
