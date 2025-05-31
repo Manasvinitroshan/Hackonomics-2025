@@ -7,6 +7,7 @@ import Learn from './Learn';
 import Simulation from './Simulation';
 import Forum from './Forum';
 import Events from './Events';
+import AiCFO from './AiCFO';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('Dashboard');
@@ -23,6 +24,8 @@ export default function Home() {
         return <Forum />;
       case 'Events':
         return <Events />;
+        case 'AI CFO':
+        return <AiCFO />;
       default:
         return <Dashboard />;
     }

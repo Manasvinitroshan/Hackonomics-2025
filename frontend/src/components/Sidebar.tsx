@@ -7,6 +7,7 @@ const navItems = [
   { name: 'Simulation', icon: <FaCogs /> },
   { name: 'Forum', icon: <FaComments /> },
   { name: 'Events', icon: <FaCalendarAlt /> },
+  { name: 'AI CFO', icon: <FaCalendarAlt /> },
 ];
 
 export default function Sidebar({ onTabChange, activeTab }) {

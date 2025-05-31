@@ -77,6 +77,7 @@ export default function Login() {
             <button type="button"><FaGithub size={20}/> GitHub</button>
           </div>
         </form>
+        
       </div>
     </div>
   );

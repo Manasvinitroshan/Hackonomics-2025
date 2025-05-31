@@ -61,7 +61,8 @@
 
 .login-form input[type="email"],
 .login-form input[type="password"],
-.login-form input[type="text"] {
+.login-form input[type="text"],
+.login-form input[type="textarea"]  {
   width: 100%;
   padding: 0.625rem 0.75rem;
   margin-bottom: 0.75rem;
@@ -201,6 +202,224 @@
 
 /* hover effect for the submit button */
 .login-form button[type="submit"]:hover {
+  transform: scale(1.02);
+  background: linear-gradient(90deg, #4f46e5, #4338ca);
+}
+
+
+.forum-post {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.forum-post .meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.forum-post .author {
+  font-weight: 600;
+  color: #111827;
+}
+
+.forum-post .content {
+  font-size: 1rem;
+  color: #111827;
+  background-color: #f9fafb;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.forum-post .actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.forum-post .actions button {
+  font-size: 0.875rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+  border: 2px solid #d1d5db;
+  background-color: #f9fafb;
+}
+
+.replies {
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid #e5e7eb;
+}
+
+.replies div {
+  background-color: #fefefe;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+/* ==== Reply Box & Editor ==== */
+.reply-box {
+  background-color: #f3f4f6;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.reply-editor {
+  min-height: 3rem;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+  background-color: #f3f4f6;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+}
+
+.reply-editor:empty:before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  pointer-events: none;
+  display: block;
+}
+
+.reply-box button {
+  display: block;
+  margin: 0.75rem auto 0 auto;
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.reply-box button:hover {
+  transform: scale(1.02);
+  background: linear-gradient(90deg, #4f46e5, #4338ca);
+}
+
+/* Shared editable input for post + reply */
+.post-editor {
+  min-height: 4rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  outline: none;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+}
+
+.post-editor:empty:before {
+  content: attr(data-placeholder);
+  color: #9ca3af;
+  pointer-events: none;
+  display: block;
+}
+
+/* Forum post layout */
+.forum-post {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.forum-post .meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.forum-post .author {
+  font-weight: 600;
+  color: #111827;
+}
+
+.forum-post .content {
+  font-size: 1rem;
+  color: #111827;
+  background-color: #f9fafb;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.forum-post .actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.forum-post .actions button {
+  font-size: 0.875rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+  border: 2px solid #d1d5db;
+  background-color: #f9fafb;
+}
+
+/* Replies */
+.replies {
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid #e5e7eb;
+}
+
+.replies div {
+  background-color: #fefefe;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+/* Button styling (shared) */
+button {
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  margin-top: 0.75rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+button:hover {
   transform: scale(1.02);
   background: linear-gradient(90deg, #4f46e5, #4338ca);
 }
