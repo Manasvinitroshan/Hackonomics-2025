@@ -1,150 +1,93 @@
-/* FinLaunch UI Theme - Consistent with Login.css style */
+/* ======================================= */
+/*               sidebar.css               */
+/* ======================================= */
 
-.page-container {
-    min-height: 100vh;
-    background-color: #f9fafb;
-    padding: 2rem;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.5s ease-in;
-  }
-  
-  .card {
-    background-color: #ffffff;
-    border-radius: 0.75rem;
-    padding: 2rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
-  }
-  
-  .card:hover {
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
-  }
-  
-  .heading {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 1rem;
-  }
-  
-  .subtext {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin-bottom: 1.5rem;
-  }
-  
-  .button-primary {
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(90deg, #6366f1, #4f46e5);
-    color: #ffffff;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s ease;
-  }
-  
-  .button-primary:hover {
-    transform: scale(1.03);
-    background: linear-gradient(90deg, #4f46e5, #4338ca);
-  }
-  
-  .section {
-    margin-bottom: 2rem;
-  }
-  
-  .divider {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 2rem 0;
-  }
-  
-  .divider::before,
-  .divider::after {
-    content: "";
-    flex: 1;
-    border-bottom: 1px solid #e5e7eb;
-  }
-  
-  .divider:not(:empty)::before {
-    margin-right: 0.75em;
-  }
-  
-  .divider:not(:empty)::after {
-    margin-left: 0.75em;
-  }
-  
-  .divider span {
-    font-size: 0.75rem;
-    color: #6b7280;
-    font-style: italic;
-  }
-  
-  .fade-in {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.97); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  
-  /* Sidebar Styles */
-
+/* ─── 1) Container ──────────────────────────────── */
 .sidebar-container {
   width: 240px;
+  background-color: #111827;   /* very dark/navy */
+  color: #f3f4f6;              /* off-white text */
+  padding-top: 2.5rem;
   min-height: 100vh;
-  background-color: #4f46e5; /* Indigo background */
-  color: white;
-  padding: 2rem 1.5rem;
-  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 0;
   font-family: 'Inter', sans-serif;
-  border-radius: 1rem 0 0 1rem; /* Rounded left side */
+  display: flex;
+  flex-direction: column;
+  align-items: center;        /* centers “Foundr” and nav items horizontally */
 }
 
-.sidebar-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+/* ─── 2) “🚀 Foundr” HEADER ───────────────────────── */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;    /* center the icon + text */
   margin-bottom: 2rem;
 }
 
+.sidebar-logo-emoji {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+  color: #4f46e5;             /* subtle indigo accent */
+}
+
+.sidebar-logo-text {
+  font-size: 1.5rem;          /* slightly larger to balance the emoji */
+  font-weight: 700;
+  color: #f3f4f6;             /* off-white */
+}
+
+/* ─── 3) NAV LINKS (flat list) ────────────────────── */
 .sidebar-nav {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  padding: 0 0.5rem;          /* horizontal padding for alignment */
 }
 
 .sidebar-link {
   background: none;
   border: none;
-  color: white;
+  color: #f3f4f6;             /* off-white */
   font-size: 1rem;
   text-align: left;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1rem;      /* vertical 0.75, horizontal 1 */
   border-radius: 0.5rem;
   transition: background-color 0.2s ease;
   cursor: pointer;
   display: flex;
   align-items: center;
+  margin-bottom: 0.25rem;     /* small gap between each link */
 }
 
 .sidebar-link:hover {
-  background-color: #4338ca;
+  background-color: #1f1b2e;  /* slightly lighten nav on hover */
 }
 
 .sidebar-link.active {
-  background-color: #7c3aed; /* Slightly different indigo for active state */
-  font-weight: 600;
+  background-color: #2d2d2e;  /* subtle dark-gray when active */
+  color: #f3f4f6;             /* keep label off-white */
+  font-weight: 600;           /* slightly bolder */
 }
 
+/* ─── 4) ICON + TEXT INSIDE BUTTON ────────────────── */
 .sidebar-icon {
   margin-right: 0.75rem;
   font-size: 1.2rem;
+  flex-shrink: 0;
+  color: #f3f4f6;             /* ensure icon is off-white */
 }
 
+.sidebar-link-text {
+  flex-shrink: 0;
+  color: inherit;             /* same as surrounding text */
+}
+
+/* ─── 5) (Optional) fade-in support ───────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
 
 .content-fade {
   opacity: 0;
@@ -158,4 +101,3 @@
     transform: translateY(0);
   }
 }
-

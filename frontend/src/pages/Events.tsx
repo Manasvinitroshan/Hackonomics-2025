@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../styles/login.css';
+import '/Users/manassingh/LeanFoundr/frontend/src/styles/events.css';
 
 interface EventItem {
   title: string;
@@ -43,7 +43,7 @@ const Events = () => {
     : [];
 
   return (
-    <>
+    <div className="page">
       <div className="calendar-title">
         <h2>Events Calendar</h2>
         <p className="login-subtext">Your builder timeline from coffee chats to Series A</p>
@@ -64,9 +64,9 @@ const Events = () => {
       </div>
 
       <div className="event-layout">
-        {/* Left side: Calendar */}
         <div className="calendar-side">
           <div className="calendar-year-grid">
+            
             {Array.from({ length: 12 }, (_, i) => {
               const date = new Date(year, i, 1);
               const month = date.toLocaleString('default', { month: 'long' });
@@ -86,6 +86,7 @@ const Events = () => {
                       className={`calendar-cell ${hasEvent ? 'has-event' : ''} ${isSelected ? 'selected-date' : ''}`}
                       onClick={() => handleDayClick(fullDate)}
                     >
+                      
                       {day}
                     </div>
                   );
@@ -94,6 +95,7 @@ const Events = () => {
 
               return (
                 <div key={i} className="month-container">
+                  
                   <h3>{month}</h3>
                   <div className="calendar-grid">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, i) => (
@@ -109,15 +111,12 @@ const Events = () => {
           </div>
         </div>
 
-        {/* Right side: Event list */}
-        <div className="events-side">
-          <h3>
-            Events on {selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric'
-            }) : '[Select a date]'}
-          </h3>
+        <div className="event-layout2 ">
+          
+        <h3 >
+ 
+</h3>
+
           {filteredEvents.length === 0 ? (
             <p>No events found.</p>
           ) : (
@@ -135,7 +134,6 @@ const Events = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
@@ -170,7 +168,7 @@ const Events = () => {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

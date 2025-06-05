@@ -1,19 +1,34 @@
-import { FaTachometerAlt, FaBook, FaCogs, FaComments, FaCalendarAlt } from 'react-icons/fa';
-import '../styles/sidebar.css'; // Your styles file
+// src/components/Sidebar.jsx
+import React from 'react';
+import {
+  FaTachometerAlt,
+  FaBook,
+  FaCogs,
+  FaComments,
+  FaCalendarAlt,
+  FaWallet
+} from 'react-icons/fa';
+import '../styles/sidebar.css';
 
 const navItems = [
-  { name: 'Dashboard', icon: <FaTachometerAlt /> },
-  { name: 'Learn', icon: <FaBook /> },
+  { name: 'Dashboard',  icon: <FaTachometerAlt /> },
+  { name: 'Learn',      icon: <FaBook /> },
   { name: 'Simulation', icon: <FaCogs /> },
-  { name: 'Forum', icon: <FaComments /> },
-  { name: 'Events', icon: <FaCalendarAlt /> },
-  { name: 'AI CFO', icon: <FaCalendarAlt /> },
+  { name: 'Forum',      icon: <FaComments /> },
+  { name: 'Events',     icon: <FaCalendarAlt /> },
+  { name: 'AI CFO',     icon: <FaWallet /> },  // switched to a wallet icon
 ];
 
 export default function Sidebar({ onTabChange, activeTab }) {
   return (
-    <div className="sidebar-container">
-      <h1 className="sidebar-title">FinLaunch</h1>
+    <aside className="sidebar-container">
+      {/* ─── “🚀 Foundr” HEADER ─────────────────────────────── */}
+      <div className="sidebar-header">
+        <span className="sidebar-logo-emoji">🚀</span>
+        <span className="sidebar-logo-text">Foundr</span>
+      </div>
+
+      {/* ─── FLAT LIST OF NAV ITEMS ────────────────────────── */}
       <nav className="sidebar-nav">
         {navItems.map(({ name, icon }) => (
           <button
@@ -22,10 +37,10 @@ export default function Sidebar({ onTabChange, activeTab }) {
             className={`sidebar-link ${activeTab === name ? 'active' : ''}`}
           >
             <span className="sidebar-icon">{icon}</span>
-            {name}
+            <span className="sidebar-link-text">{name}</span>
           </button>
         ))}
       </nav>
-    </div>
+    </aside>
   );
 }
