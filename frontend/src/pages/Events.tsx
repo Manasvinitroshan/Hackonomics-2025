@@ -45,7 +45,7 @@ const Events = () => {
   return (
     <div className="page">
       <div className="calendar-title">
-        <h2>Events Calendar</h2>
+        <h2 style={{color: '#1f1b2e'}}>Events Calendar</h2>
         <p className="login-subtext">Your builder timeline from coffee chats to Series A</p>
       </div>
 
@@ -58,7 +58,7 @@ const Events = () => {
         </div>
         <div className="right year-nav">
           <button onClick={() => setYear(y => y - 1)}>←</button>
-          <span>{year}</span>
+          <span style={{color: '#1f1b2e'}}>{year}</span>
           <button onClick={() => setYear(y => y + 1)}>→</button>
         </div>
       </div>

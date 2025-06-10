@@ -62,6 +62,10 @@ const Login: FC = () => {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              style={{
+                backgroundColor: '#ffffff',  // white background
+                color: 'black',            // white text
+              }}
             />
             <input
               type="password"
@@ -69,6 +73,10 @@ const Login: FC = () => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              style={{
+                backgroundColor: '#ffffff',  // white background
+                color: 'black',            // white text
+              }}
             />
             <button type="submit">Sign in</button>
             {message && <p className="login-error">{message}</p>}

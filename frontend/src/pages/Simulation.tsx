@@ -167,13 +167,20 @@ export default function Simulation() {
               <h3>{cat.category}</h3>
               <div className="simulation-grid">
                 {cat.items.map((item, subIdx) => (
-                  <button
-                    key={subIdx}
-                    onClick={() => handleClick(item)}
-                    className="simulation-button"
-                  >
-                    {item}
-                  </button>
+                   <button
+                   key={subIdx}
+                   onClick={() => handleClick(item)}
+                   className="simulation-button"
+                   style={{
+                     backgroundColor: '#1f1b2e',  // dark card‐style background
+                     color: '#ffffff',            // white text
+                     border: '1px solid #2d2d2e', // subtle dark border
+                   }}
+                 >
+                   {item}
+                 </button>
+                
+                
                 ))}
               </div>
             </div>

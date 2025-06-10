@@ -1,6 +1,10 @@
-import axios from 'axios';
-
-export const extractText = async (bucket: string, key: string) => {
-  const res = await axios.post('http://localhost:3001/api/extract', { bucket, key });
-  return res.data.text;
-};
+export async function extractText(bucket: string, key: string): Promise<string> {
+  const res = await fetch('/api/extract', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bucket, key }),
+  });
+  if (!res.ok) throw new Error(`Request failed with status code ${res.status}`);
+  const { text } = await res.json();
+  return text;
+}

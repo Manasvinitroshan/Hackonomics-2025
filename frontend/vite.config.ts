@@ -18,4 +18,20 @@ export default defineConfig({
     global: 'window',
     'process.env': {},
   },
+
+  // ── Proxy API calls to your Express backend on :3001 ─────────────────────────
+  server: {
+    proxy: {
+      // Proxy POST /upload → http://localhost:3001/upload
+      '/upload': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+      // Proxy any /api/* → http://localhost:3001/api/*
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
 })

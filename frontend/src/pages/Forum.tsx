@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+// frontend/src/pages/Forum.tsx
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import '../styles/login.css';
+import { getCurrentUsername } from '../utils/cognito';
 
 interface Post {
-  id: number;
+  postId: string;
   author: string;
   content: string;
   timestamp: string;
@@ -11,79 +15,132 @@ interface Post {
   replies: string[];
 }
 
+type Vote = 'like' | 'dislike';
+
 export default function Forum() {
-  const [posts, setPosts] = useState<Post[]>([{
-    id: 1,
-    author: 'Jane Doe',
-    content: 'Just launched my MVP! How do I calculate burn rate effectively?',
-    timestamp: '2025-05-31T10:00:00Z',
-    likes: 0,
-    dislikes: 0,
-    replies: [],
-  }]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [newPostText, setNewPostText] = useState('');
+  const [isPosting, setIsPosting] = useState(false);
+  const [voteStatus, setVoteStatus] = useState<Record<string, Vote>>({});
+  const [replyText, setReplyText] = useState<Record<string, string>>({});
 
-  const [replyText, setReplyText] = useState<{ [key: number]: string }>({});
-  const [newPost, setNewPost] = useState('');
+  const currentUsername = getCurrentUsername() || 'Anonymous';
 
+  // 1) Fetch posts on mount
+  useEffect(() => {
+    axios
+      .get<Post[]>('http://localhost:3001/api/posts')
+      .then(res => setPosts(res.data))
+      .catch(console.error);
+  }, []);
+
+  // 2) Create new post
   const handlePost = () => {
-    if (!newPost.trim()) return;
-    const newEntry: Post = {
-      id: posts.length + 1,
-      author: 'Current User',
-      content: newPost.trim(),
-      timestamp: new Date().toISOString(),
-      likes: 0,
-      dislikes: 0,
-      replies: [],
-    };
-    setPosts([newEntry, ...posts]);
-    setNewPost('');
-    const editor = document.getElementById('new-post-editor');
-    if (editor) editor.innerText = '';
+    if (!newPostText.trim()) return;
+    setIsPosting(true);
+
+    axios
+      .post<Post>('http://localhost:3001/api/posts', {
+        author: currentUsername,
+        content: newPostText.trim(),
+      })
+      .then(res => {
+        setPosts(prev => [res.data, ...prev]);
+        setNewPostText('');
+        const editor = document.getElementById('new-post-editor');
+        if (editor) (editor as HTMLElement).innerText = '';
+      })
+      .catch(console.error)
+      .finally(() => setIsPosting(false));
   };
 
-  const handleLike = (id: number) => {
-    setPosts(posts.map(p => p.id === id ? { ...p, likes: p.likes + 1 } : p));
+  // 3) Unified vote handler (calls backend with user + timestamp)
+  const handleVote = async (
+    postId: string,
+    timestamp: string,
+    vote: Vote
+  ) => {
+    // prevent double‐voting
+    if (voteStatus[postId] === vote) return;
+
+    try {
+      const res = await axios.patch<Post>(
+        `http://localhost:3001/api/posts/${postId}/${vote}`,
+        { timestamp, user: currentUsername }
+      );
+      // update post with backend’s counts
+      setPosts(prev =>
+        prev.map(p => (p.postId === postId ? res.data! : p))
+      );
+      // record that we’ve now voted
+      setVoteStatus(vs => ({ ...vs, [postId]: vote }));
+    } catch (err) {
+      console.error(`Failed to ${vote}`, err);
+    }
   };
 
-  const handleDislike = (id: number) => {
-    setPosts(posts.map(p => p.id === id ? { ...p, dislikes: p.dislikes + 1 } : p));
-  };
+  // 4) Reply handler (unchanged)
+  const handleReply = async (postId: string, timestamp: string) => {
+    const text = replyText[postId]?.trim();
+    if (!text) return;
 
-  const handleReply = (id: number) => {
-    const text = replyText[id];
-    if (!text?.trim()) return;
-    setPosts(posts.map(p =>
-      p.id === id ? { ...p, replies: [...p.replies, text.trim()] } : p
-    ));
-    setReplyText(prev => ({ ...prev, [id]: '' }));
-    const editor = document.getElementById(`reply-editor-${id}`);
-    if (editor) editor.innerText = '';
+    try {
+      const res = await axios.patch<Post>(
+        `http://localhost:3001/api/posts/${postId}/reply`,
+        { timestamp, reply: text }
+      );
+      setPosts(prev =>
+        prev.map(p => (p.postId === postId ? res.data! : p))
+      );
+      setReplyText(r => ({ ...r, [postId]: '' }));
+      const editor = document.getElementById(`reply-editor-${postId}`);
+      if (editor) (editor as HTMLElement).innerText = '';
+    } catch (err) {
+      console.error('Failed to send reply:', err);
+    }
   };
 
   return (
     <div className="login-page">
-      <div className="login-card" style={{ maxWidth: '720px', width: '100%' }}>
+      <div className="login-card" style={{ maxWidth: 720, width: '100%' }}>
         <h2 className="login-heading">Founder Forum</h2>
-        <p className="login-subtext">Post insights, questions, or lessons from your startup journey.</p>
+        <p className="login-subtext">
+          Post insights, questions, or lessons from your startup journey.
+        </p>
 
+        {/* New Post */}
         <div className="login-form">
           <div
             id="new-post-editor"
             contentEditable
             className="post-editor"
             data-placeholder="What's on your mind?"
-            onInput={e => setNewPost((e.target as HTMLElement).innerText)}
-            suppressContentEditableWarning={true}
+            suppressContentEditableWarning
+            onInput={e =>
+              setNewPostText((e.currentTarget as HTMLElement).innerText)
+            }
           />
-          <button type="submit" onClick={handlePost}>Post</button>
+          <button
+            onClick={handlePost}
+            disabled={isPosting}
+            style={{
+              opacity: isPosting ? 0.6 : 1,
+              cursor: isPosting ? 'not-allowed' : 'pointer',
+              color: '#ffffff',
+            }}
+          >
+            {isPosting ? 'Posting…' : 'Post'}
+          </button>
         </div>
 
-        <div className="login-divider"><span>Recent Posts</span></div>
+        <div className="login-divider">
+          <span>Recent Posts</span>
+        </div>
 
+        {/* Posts List */}
         <div className="space-y-6">
           {posts.map(post => (
-            <div key={post.id} className="forum-post">
+            <div key={post.postId} className="forum-post">
               <div className="meta">
                 <span className="author">{post.author}</span>
                 <span>{new Date(post.timestamp).toLocaleString()}</span>
@@ -92,8 +149,24 @@ export default function Forum() {
               <div className="content">{post.content}</div>
 
               <div className="actions">
-                <button onClick={() => handleLike(post.id)} className="bg-blue-100 text-blue-700 hover:bg-blue-200">👍 {post.likes}</button>
-                <button onClick={() => handleDislike(post.id)} className="bg-red-100 text-red-700 hover:bg-red-200">👎 {post.dislikes}</button>
+                <button
+                  disabled={voteStatus[post.postId] === 'like'}
+                  onClick={() =>
+                    handleVote(post.postId, post.timestamp, 'like')
+                  }
+                  style={{ color: '#ffffff' }}
+                >
+                  👍 {post.likes}
+                </button>
+                <button
+                  disabled={voteStatus[post.postId] === 'dislike'}
+                  onClick={() =>
+                    handleVote(post.postId, post.timestamp, 'dislike')
+                  }
+                  style={{ color: '#ffffff' }}
+                >
+                  👎 {post.dislikes}
+                </button>
               </div>
 
               {post.replies.length > 0 && (
@@ -106,22 +179,26 @@ export default function Forum() {
                 </div>
               )}
 
-              {/* Reply Input */}
               <div style={{ marginTop: '1rem' }}>
                 <div
-                  id={`reply-editor-${post.id}`}
+                  id={`reply-editor-${post.postId}`}
                   contentEditable
                   className="post-editor"
                   data-placeholder="Write a reply..."
+                  suppressContentEditableWarning
                   onInput={e =>
-                    setReplyText(prev => ({
-                      ...prev,
-                      [post.id]: (e.target as HTMLElement).innerText,
+                    setReplyText(r => ({
+                      ...r,
+                      [post.postId]: (e.currentTarget as HTMLElement).innerText,
                     }))
                   }
-                  suppressContentEditableWarning={true}
                 />
-                <button onClick={() => handleReply(post.id)}>Reply</button>
+                <button
+                  onClick={() => handleReply(post.postId, post.timestamp)}
+                  style={{ color: '#ffffff' }}
+                >
+                  Reply
+                </button>
               </div>
             </div>
           ))}

@@ -1,6 +1,13 @@
-import axios from 'axios';
-
-export const uploadFileToS3 = async (formData: FormData) => {
-  const res = await axios.post('http://localhost:3001/api/upload', formData);
-  return res.data;
+export type UploadResponse = {
+  key: string;
+  location: string;
 };
+
+export async function uploadFileToS3(data: FormData): Promise<UploadResponse> {
+  const res = await fetch('/upload', {
+    method: 'POST',
+    body: data,
+  });
+  if (!res.ok) throw new Error(`Request failed with status code ${res.status}`);
+  return res.json();
+}

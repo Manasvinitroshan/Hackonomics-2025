@@ -9,7 +9,7 @@
   }
   
   .year-nav button {
-    background: linear-gradient(90deg, #6366f1, #4f46e5);
+    background: linear-gradient(90deg, #09080d, #342d4e);
     border: none;
     color: white;
     font-weight: bold;
@@ -77,7 +77,7 @@
   }
   
   .selected-date {
-    background-color: #6366f1 !important;
+    background-color: #342d4e !important;
     color: white;
   }
   
@@ -133,7 +133,7 @@
   
   .dashboard-header button {
     padding: 0.5rem 1rem;
-    background: linear-gradient(90deg, #6366f1, #4f46e5);
+    background: linear-gradient(90deg, #09080d, #342d4e);
     color: white;
     border: none;
     border-radius: 0.5rem;

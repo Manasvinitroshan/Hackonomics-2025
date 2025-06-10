@@ -39,7 +39,7 @@ export default function Home() {
     <div className="app-shell">
       <Sidebar onTabChange={setActiveTab} activeTab={activeTab} />
       <div className="main-content">
-        <Topbar />
+        
         <main className="content-area">
           {renderContent()}
         </main>

@@ -2,74 +2,75 @@
 
 /* ─── Container: cover full viewport, stack rows evenly ─── */
 .ticker-container {
-    position: absolute;
-    inset: 0;                      /* top:0; left:0; right:0; bottom:0 */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly; /* three rows → top, middle, bottom spacing */
-    z-index: 0;
-    pointer-events: none;          /* clicks go through to login form */
-    background-color: transparent;
-    opacity: 0.5;                  /* VERY faint so form pops more; adjust as needed */
-  }
-  
-  /* ─── Each row overflows horizontally ─── */
-  .ticker-row {
-    white-space: nowrap;
-    overflow: hidden;
-  }
-  
-  /* ─── .reverse toggles the opposite animation ─── */
-  .ticker-row.reverse .ticker-content {
-    animation: scroll-right 20s linear infinite;
-  }
-  
-  /* ─── Default rows animate leftward ─── */
-  .ticker-row:not(.reverse) .ticker-content {
-    animation: scroll-left 20s linear infinite;
-  }
-  
-  .ticker-content {
-    display: inline-flex;
-    /* In each row we have “2×” the data, so we move exactly 50% of its own width */
-  }
-  
-  /* ─── Each ticker item block ─── */
-  .ticker-item {
-    display: flex;
-    align-items: center;
-    margin-right: 48px;     
-    color: white;  /* off-white at 80% opacity */
-    font-size: 14px;
-    font-weight: 500;
-  }
-  
-  .symbol {
-    font-weight: 600;
-    margin-right: 6px;
-  }
-  
-  .price {
-    margin-right: 6px;
-  }
-  
-  .change.positive {
-    color: #4caf50;   /* green for positive change */
-  }
-  
-  .change.negative {
-    color: #f44336;   /* red for negative change */
-  }
-  
-  /* ─── Scroll from right→left by 50% of the element’s width ─── */
-  @keyframes scroll-left {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-  
-  /* ─── Scroll from left→right by 50% (reverse) ─── */
-  @keyframes scroll-right {
-    0%   { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
-  }
-  
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  z-index: 0;
+  pointer-events: none;
+  background-color: transparent;
+  opacity: 0.65;
+}
+
+/* ─── Each row overflows horizontally ─── */
+.ticker-row {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* ─── .reverse toggles the opposite animation ─── */
+.ticker-row.reverse .ticker-content {
+  /* slower: 40s instead of 20s */
+  animation: scroll-right 80s linear infinite;
+}
+
+/* ─── Default rows animate leftward ─── */
+.ticker-row:not(.reverse) .ticker-content {
+  /* slower: 40s instead of 20s */
+  animation: scroll-left 80s linear infinite;
+}
+
+.ticker-content {
+  display: inline-flex;
+}
+
+/* ─── Each ticker item block ─── */
+.ticker-item {
+  display: flex;
+  align-items: center;
+  /* more gap between items: 96px instead of 48px */
+  margin-right: 96px;     
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.symbol {
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.price {
+  margin-right: 6px;
+}
+
+.change.positive {
+  color: #4caf50;
+}
+
+.change.negative {
+  color: #f44336;
+}
+
+/* ─── Scroll from right→left by 50% of the element’s width ─── */
+@keyframes scroll-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ─── Scroll from left→right by 50% (reverse) ─── */
+@keyframes scroll-right {
+  0%   { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
