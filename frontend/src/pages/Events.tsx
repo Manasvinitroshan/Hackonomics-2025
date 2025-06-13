@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+// src/pages/Events.tsx
+import React, { useState, useEffect } from 'react';
 import '/Users/manassingh/LeanFoundr/frontend/src/styles/events.css';
 
 interface EventItem {
   title: string;
-  date: string;
-  time: string;
-  location: string;
-  speaker: string;
+  date: string;     // yyyy-MM-dd
+  time: string;     // full when string
+  location: string; // comma-joined address
+  speaker: string;  // we’ll use venue name
 }
+
+// helper to turn "Jun" → "06", etc.
+const MONTH_MAP: Record<string,string> = {
+  Jan: '01', Feb: '02', Mar: '03', Apr: '04',
+  May: '05', Jun: '06', Jul: '07', Aug: '08',
+  Sep: '09', Oct: '10', Nov: '11', Dec: '12',
+};
 
 const Events = () => {
   const [year, setYear] = useState(new Date().getFullYear());
@@ -15,6 +23,7 @@ const Events = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
+  // form state (unused for fetched events, but kept for +Add Event)
   const [formData, setFormData] = useState({
     title: '',
     date: '',
@@ -22,6 +31,36 @@ const Events = () => {
     location: '',
     speaker: '',
   });
+
+  // Fetch once on mount (and refetch if year changes, so date parsing stays correct)
+  useEffect(() => {
+    const q = 'Austin startup events';
+    const loc = 'Austin,Texas,United States';
+    fetch(`/api/events?q=${encodeURIComponent(q)}&location=${encodeURIComponent(loc)}`)
+      .then(res => res.json())
+      .then((data: any[]) => {
+        const mapped: EventItem[] = data.map(ev => {
+          // ev.date.start_date is like "Jun 13"
+          const [monAbbrev, dayStr] = ev.date.start_date.split(' ');
+          const mm = MONTH_MAP[monAbbrev] || '01';
+          const dd = dayStr.padStart(2, '0');
+          const fullDate = `${year}-${mm}-${dd}`;
+
+          return {
+            title: ev.title,
+            date: fullDate,
+            time: ev.date.when,
+            location: (ev.address || []).join(', '),
+            speaker: ev.venue?.name || '',
+          };
+        });
+        setEvents(mapped);
+      })
+      .catch(err => {
+        console.error('Failed to load events', err);
+        setEvents([]);
+      });
+  }, [year]);
 
   const handleDayClick = (fullDate: string) => {
     setSelectedDate(fullDate);
@@ -66,28 +105,29 @@ const Events = () => {
       <div className="event-layout">
         <div className="calendar-side">
           <div className="calendar-year-grid">
-            
             {Array.from({ length: 12 }, (_, i) => {
-              const date = new Date(year, i, 1);
-              const month = date.toLocaleString('default', { month: 'long' });
-              const daysInMonth = new Date(year, i + 1, 0).getDate();
-              const firstDay = new Date(year, i, 1).getDay();
+              const monthName = new Date(year, i, 1)
+                .toLocaleString('default', { month: 'long' });
+              const daysInMonth = new Date(year, i+1, 0).getDate();
+              const firstDayIndex = new Date(year, i, 1).getDay();
 
-              const fullCells = Array(firstDay).fill(null).concat(
+              // build blank cells + days
+              const cells = Array(firstDayIndex).fill(null).concat(
                 Array.from({ length: daysInMonth }, (_, d) => {
-                  const day = d + 1;
-                  const fullDate = `${year}-${String(i + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                  const dayNum = d + 1;
+                  const mm = String(i+1).padStart(2,'0');
+                  const dd = String(dayNum).padStart(2,'0');
+                  const fullDate = `${year}-${mm}-${dd}`;
                   const hasEvent = events.some(e => e.date === fullDate);
                   const isSelected = selectedDate === fullDate;
 
                   return (
                     <div
-                      key={day}
-                      className={`calendar-cell ${hasEvent ? 'has-event' : ''} ${isSelected ? 'selected-date' : ''}`}
+                      key={dayNum}
+                      className={`calendar-cell ${hasEvent? 'has-event':''} ${isSelected? 'selected-date':''}`}
                       onClick={() => handleDayClick(fullDate)}
                     >
-                      
-                      {day}
+                      {dayNum}
                     </div>
                   );
                 })
@@ -95,15 +135,11 @@ const Events = () => {
 
               return (
                 <div key={i} className="month-container">
-                  
-                  <h3>{month}</h3>
+                  <h3>{monthName}</h3>
                   <div className="calendar-grid">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d, i) => (
-                      <div key={i} className="calendar-day-name">{d}</div>
-                    ))}
-                    {fullCells.map((cell, i) =>
-                      cell ? cell : <div key={`empty-${i}`} className="calendar-cell" />
-                    )}
+                    {['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+                      .map(d => <div key={d} className="calendar-day-name">{d}</div>)}
+                    {cells.map((c, idx) => c ?? <div key={idx} className="calendar-cell" />)}
                   </div>
                 </div>
               );
@@ -111,23 +147,21 @@ const Events = () => {
           </div>
         </div>
 
-        <div className="event-layout2 ">
-          
-        <h3 >
- 
-</h3>
-
+        <div className="event-layout2">
+          {selectedDate && <h3>Events on {selectedDate}</h3>}
           {filteredEvents.length === 0 ? (
             <p>No events found.</p>
           ) : (
-            filteredEvents.map((event, idx) => (
+            filteredEvents.map((ev, idx) => (
               <div key={idx} className="event-card">
-                <h4>{event.title}</h4>
-                <p><strong>Time:</strong> {event.time}</p>
-                <p><strong>Location:</strong> {event.location}</p>
-                <p><strong>Speaker:</strong> {event.speaker}</p>
-                <p><strong>Date:</strong> {event.date}</p>
-                <button className="delete-btn" onClick={() => deleteEvent(event)}>Delete</button>
+                <h4>{ev.title}</h4>
+                <p><strong>Time:</strong> {ev.time}</p>
+                <p><strong>Location:</strong> {ev.location}</p>
+                <p><strong>Speaker:</strong> {ev.speaker}</p>
+                <p><strong>Date:</strong> {ev.date}</p>
+                <button className="delete-btn" onClick={() => deleteEvent(ev)}>
+                  Delete
+                </button>
               </div>
             ))
           )}

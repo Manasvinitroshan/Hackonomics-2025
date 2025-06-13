@@ -242,3 +242,151 @@
     margin-top: 2rem;
     justify-content: center;
   }
+
+  /* events.css */
+
+/* 1) Base day cell */
+.calendar-cell {
+  background-color: #ffffff;  /* white bg */
+  color: #000000;             /* black text */
+  border-radius: 4px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+/* 2) Days with events */
+.calendar-cell.has-event {
+  background-color: #e0e0e0;  /* light grey */
+  color: #000000;             /* black text */
+}
+
+/* 3) Currently selected day */
+.calendar-cell.selected-date {
+  background-color: #c0c0c0;  /* darker grey */
+  color: #000000;
+}
+
+/* 4) Month titles & weekday headers */
+.month-container h3,
+.calendar-day-name {
+  color: #000000;             /* force black */
+  margin: 4px 0;
+  font-weight: 500;
+}
+
+/* 5) Toolbar & inline labels */
+.toolbar-controls button,
+.toolbar-controls span,
+.login-subtext,
+.calendar-title h2 {
+  color: #000000 !important;  /* override inline or other styles */
+}
+
+/* 6) Button hover states */
+.toolbar-controls button:hover,
+.delete-btn:hover {
+  opacity: 0.8;
+}
+
+/* 7) Event‐card text */
+.event-card h4,
+.event-card p {
+  color: #000000;
+}
+
+/* 8) Modal inputs/buttons */
+.modal input,
+.modal button {
+  color: #000000;
+}
+
+/* (Optional) make sure your grid gaps are visible */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+
+
+
+/* events.css */
+
+/* ─── GRID LAYOUT ───────────────────────────────────────────────────────────── */
+.calendar-year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+/* ─── DAY CELLS ─────────────────────────────────────────────────────────────── */
+.calendar-cell {
+  background-color: #ffffff; /* white bg */
+  color: #000000;            /* black text */
+  border-radius: 4px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.calendar-cell.has-event {
+  background-color: #e0e0e0; /* light grey bg */
+  color: #000000;            /* black text */
+}
+
+.calendar-cell.selected-date {
+  background-color: #1f1b2e; /* dark bg */
+  color: #ffffff;            /* white text */
+}
+
+/* ─── HEADERS & LABELS ────────────────────────────────────────────────────── */
+.month-container h3,
+.calendar-day-name,
+.calendar-title h2,
+.login-subtext,
+.event-card h4,
+.event-card p {
+  color: #000000; /* force black text */
+}
+
+/* ─── TOOLBAR BUTTONS ───────────────────────────────────────────────────────── */
+.toolbar-controls button,
+.year-nav button,
+.delete-btn {
+  background-color: #1f1b2e; /* same dark bg */
+  color: #ffffff !important; /* white text */
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.toolbar-controls button:hover,
+.year-nav button:hover,
+.delete-btn:hover {
+  opacity: 0.8;
+}
+
+/* ─── MODAL ───────────────────────────────────────────────────────────────── */
+.modal,
+.modal input,
+.modal button {
+  color: #000000; /* black text inside modal */
+}
+
+/* ─── MISC ────────────────────────────────────────────────────────────────── */
+.event-layout2 h3 {
+  color: #000000;
+}

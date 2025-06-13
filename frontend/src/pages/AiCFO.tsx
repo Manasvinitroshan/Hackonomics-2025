@@ -1,227 +1,209 @@
 // src/pages/ai-cfo/AiCFO.tsx
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { uploadFileToS3 } from '/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/upload.ts';
-import { extractText } from '/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/extract.ts';
-import { askQuestion } from '/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/ask.ts';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ChangeEvent,
+  FormEvent
+} from "react";
+import { uploadFileToS3 } from "/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/upload.ts";
+import { extractText }    from "/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/extract.ts";
+import { askQuestion }    from "/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/ask.ts";
+import "/Users/manassingh/LeanFoundr/frontend/src/styles/aifcfo.css";
 
-type Message = {
-  from: 'user' | 'ai';
-  text: string;
-};
+type Message = { from: "user" | "ai"; text: string };
 
 export default function AiCFO() {
-  // ── STATE ─────────────────────────────────────────────────────────────────────
-  const [file, setFile] = useState<File | null>(null);
-  const [contextText, setContextText] = useState<string>('');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [currentQuestion, setCurrentQuestion] = useState<string>('');
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [isLoadingAnswer, setIsLoadingAnswer] = useState<boolean>(false);
-  const [status, setStatus] = useState<string>('');  
-  // “status” will show on screen whether we’re uploading, extracting, asking, or error.
+  const [file, setFile]                   = useState<File | null>(null);
+  const [contextText, setContextText]     = useState<string>("");
+  const [messages, setMessages]           = useState<Message[]>([]);
+  const [question, setQuestion]           = useState<string>("");
+  const [callTo, setCallTo]               = useState<string>("");
+  const [status, setStatus]               = useState<string>("");
+  const [loading, setLoading]             = useState<boolean>(false);
+  const chatEndRef                        = useRef<HTMLDivElement>(null);
 
-  // ── HANDLERS ──────────────────────────────────────────────────────────────────
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-  // 1) When user picks a file
+  // Handle PDF selection
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const picked = e.target.files && e.target.files[0];
-    setFile(picked ?? null);
-    setStatus(''); // clear any previous status
-    setMessages([]); 
-    setContextText('');
+    setFile(e.target.files?.[0] ?? null);
+    setStatus("");
+    setMessages([]);
+    setContextText("");
   };
 
-  // 2) Upload the PDF → Extract text
+  // Upload and extract text
   const handleUploadAndExtract = async () => {
     if (!file) {
-      setStatus('❗ No file selected.');
+      setStatus("❗ No file selected.");
       return;
     }
-
-    setIsUploading(true);
-    setStatus('Starting upload…');
-    console.log('⏳ Starting upload of file:', file.name);
-
+    setLoading(true);
+    setStatus("Uploading…");
     try {
-      // 2a) Upload to S3
       const formData = new FormData();
-      formData.append('file', file);
-      const uploadRes: UploadResponse = await uploadFileToS3(formData);
-      console.log('✅ Upload succeeded, S3 key:', uploadRes.key);
-      setStatus('Upload succeeded. Extracting text…');
+      formData.append("file", file);
+      const { key } = await uploadFileToS3(formData);
 
-      // 2b) Extract via backend → Textract
-      const bucketName = 'ai-cfo-docs'; // must match your bucket
-      const key = uploadRes.key;
-      console.log(`⏳ Calling extractText(bucket=${bucketName}, key=${key})`);
-      const extracted = await extractText(bucketName, key);
-      console.log('✅ Extraction succeeded, text length:', extracted.length);
+      setStatus("Extracting text…");
+      const text = await extractText("ai-cfo-docs", key);
 
-      // Save text into state
-      setContextText(extracted);
-      setStatus('Extraction complete. You can now ask questions.');
-
-      // Show a “system” message in the chat
-      setMessages([
-        {
-          from: 'ai',
-          text: `✅ PDF uploaded & text extracted (${extracted.length} chars).`,
-        },
-      ]);
+      setContextText(text);
+      setMessages([{ from: "ai", text: `✅ Extracted ${text.length} characters.` }]);
+      setStatus("Ready to ask questions.");
     } catch (err: any) {
-      console.error('⚠️ Error in upload/extract:', err);
-      // If the backend returned a 4xx/5xx or network error, show it
-      const errMsg =
-        err.response?.data?.error ||
-        err.message ||
-        'Unknown upload/extract error.';
-      setStatus(`❌ ${errMsg}`);
-      setMessages([
-        {
-          from: 'ai',
-          text: `❌ Upload/extraction failed: ${errMsg}`,
-        },
-      ]);
+      const msg = err.response?.data?.error || err.message || "Unknown error";
+      setMessages([{ from: "ai", text: `❌ ${msg}` }]);
+      setStatus(`❌ ${msg}`);
     } finally {
-      setIsUploading(false);
+      setLoading(false);
     }
   };
 
-  // 3) When user types a question → call /api/ask
+  // Send a question to the RAG endpoint
   const handleSendQuestion = async (e: FormEvent) => {
     e.preventDefault();
-    if (!currentQuestion.trim()) {
-      setStatus('❗ Please type a question first.');
+    if (!question.trim()) {
+      setStatus("❗ Please enter a question.");
       return;
     }
-    if (!contextText) {
-      setStatus('❗ No document context. Upload a PDF first.');
-      return;
-    }
-
-    setIsLoadingAnswer(true);
-    setStatus('Sending question to backend…');
-    console.log('➡️ Sending question:', currentQuestion);
-
-    // Add user question to chat log immediately
-    setMessages((prev) => [...prev, { from: 'user', text: currentQuestion }]);
-
+    setLoading(true);
+    setStatus("Thinking…");
+    setMessages(prev => [...prev, { from: "user", text: question }]);
     try {
-      // 3a) Ask the backend with full context
-      const answer = await askQuestion(currentQuestion, contextText);
-      console.log('⬅️ Received answer:', answer);
-
-      // 3b) Append AI’s answer to chat
-      setMessages((prev) => [...prev, { from: 'ai', text: answer }]);
-      setStatus('Answer received.');
+      const answer = await askQuestion(question);
+      setMessages(prev => [...prev, { from: "ai", text: answer }]);
+      setStatus("");
     } catch (err: any) {
-      console.error('⚠️ Error in /api/ask:', err);
-      const errMsg =
-        err.response?.data?.error ||
-        err.message ||
-        'Unknown ask error.';
-      setStatus(`❌ ${errMsg}`);
-      setMessages((prev) => [
-        ...prev,
-        { from: 'ai', text: `❌ Failed to get answer: ${errMsg}` },
-      ]);
+      const msg = err.message || "Unknown error";
+      setMessages(prev => [...prev, { from: "ai", text: `❌ ${msg}` }]);
+      setStatus(`❌ ${msg}`);
     } finally {
-      setIsLoadingAnswer(false);
-      setCurrentQuestion('');
+      setLoading(false);
+      setQuestion("");
     }
   };
 
-  // ── RENDER ────────────────────────────────────────────────────────────────────
-  return (
-    <div style={{ maxWidth: 700, margin: '0 auto', padding: '2rem' }}>
-      <h2>📄 Upload your financial PDF</h2>
+  // Place a phone call via Retell
+  const handleCallCustomer = async () => {
+    if (!callTo.trim()) {
+      setStatus("❗ Please enter a phone number.");
+      return;
+    }
+    setLoading(true);
+    setStatus("📞 Dialing…");
+    try {
+      const res = await fetch("/api/call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ to: callTo.trim() }),
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `HTTP ${res.status}`);
+      }
+      const { call_id } = await res.json();
+      setStatus(`📞 Call started (ID: ${call_id})`);
+    } catch (err: any) {
+      setStatus(`❌ ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      {/* File picker + Upload button */}
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+  return (
+    <div className="ai-cfo-container">
+      <h2>📄 AI CFO</h2>
+
+      {/* PDF Upload Section */}
+      <div className="upload-section">
         <input
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
-          disabled={isUploading || Boolean(contextText)}
+          disabled={loading || Boolean(contextText)}
         />
         <button
           onClick={handleUploadAndExtract}
-          disabled={!file || isUploading || Boolean(contextText)}
-          style={{
-            marginLeft: '1rem',
-            padding: '0.5rem 1rem',
-            background: isUploading ? '#888' : '#4f46e5',
-            color: 'white',
-            border: 'none',
-            borderRadius: 4,
-            cursor: file && !isUploading && !contextText ? 'pointer' : 'not-allowed',
-          }}
+          disabled={!file || loading || Boolean(contextText)}
         >
-          {isUploading ? 'Uploading…' : 'Upload & Extract'}
+          {loading && !contextText ? "Uploading…" : "Upload & Extract"}
         </button>
       </div>
 
-      {/* On‑screen status (uploading/extracting/answers/errors) */}
+      {/* Status */}
       {status && (
-        <div style={{ marginBottom: '1rem', color: status.startsWith('❌') ? 'red' : 'black' }}>
+        <div
+          className="status"
+          style={{ color: status.startsWith("❌") ? "red" : undefined }}
+        >
           <em>{status}</em>
         </div>
       )}
 
-      {/* Once we have contextText, show the chat UI */}
+      {/* Chat & Call UI */}
       {contextText && (
-        <div style={{ marginTop: '2rem' }}>
-          <h3>🤖 Ask questions about the uploaded document</h3>
-
-          {/* Chat input form */}
-          <form onSubmit={handleSendQuestion} style={{ display: 'flex', gap: '0.5rem' }}>
+        <>
+          <h3>🤖 Ask Questions</h3>
+          <form onSubmit={handleSendQuestion} className="chat-input">
             <input
               type="text"
               placeholder="Type your question here…"
-              value={currentQuestion}
-              onChange={(e) => setCurrentQuestion(e.target.value)}
-              style={{
-                flexGrow: 1,
-                padding: '0.5rem',
-                border: '1px solid #ccc',
-                borderRadius: 4,
-              }}
-              disabled={isLoadingAnswer}
+              value={question}
+              onChange={e => setQuestion(e.target.value)}
+              disabled={loading}
             />
-            <button
-              type="submit"
-              disabled={!currentQuestion.trim() || isLoadingAnswer}
-              style={{
-                padding: '0.5rem 1rem',
-                background: isLoadingAnswer ? '#888' : '#10b981',
-                color: 'white',
-                border: 'none',
-                borderRadius: 4,
-                cursor: currentQuestion.trim() && !isLoadingAnswer ? 'pointer' : 'not-allowed',
-              }}
-            >
-              {isLoadingAnswer ? 'Thinking…' : 'Send'}
+            <button type="submit" disabled={!question.trim() || loading}>
+              {loading ? "Thinking…" : "Send"}
             </button>
           </form>
 
-          {/* Chat log */}
-          <div style={{ marginTop: '1.5rem', lineHeight: 1.5 }}>
+          <div className="chat-window">
             {messages.map((msg, idx) => (
-              <div
-                key={idx}
-                style={{
-                  marginBottom: '1rem',
-                  textAlign: msg.from === 'user' ? 'right' : 'left',
-                }}
-              >
-                <strong>{msg.from === 'user' ? 'You:' : 'AI:'}</strong>{' '}
-                <span style={{ display: 'inline-block', maxWidth: '80%' }}>
-                  {msg.text}
-                </span>
+              <div key={idx} className={`message ${msg.from}`}>
+                <div className={`bubble ${msg.from}`}>
+                  <strong>{msg.from === "user" ? "You:" : "AI:"}</strong> {msg.text}
+                </div>
               </div>
             ))}
+            <div ref={chatEndRef} />
           </div>
-        </div>
+
+          <h3>📞 Call Customer</h3>
+          <div style={{ textAlign: "center", margin: "1rem 0" }}>
+            <input
+              type="tel"
+              placeholder="Customer number (+1XXXXXXXXXX)"
+              value={callTo}
+              onChange={e => setCallTo(e.target.value)}
+              disabled={loading}
+              style={{
+                padding: "0.5rem",
+                borderRadius: 4,
+                border: "1px solid #ccc",
+                width: "60%",
+                marginRight: "0.5rem",
+              }}
+            />
+            <button
+              onClick={handleCallCustomer}
+              disabled={!callTo.trim() || loading}
+              style={{
+                padding: "0.5rem 1rem",
+                borderRadius: 4,
+                border: "none",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                cursor: !callTo.trim() || loading ? "not-allowed" : "pointer",
+              }}
+            >
+              {loading ? "Dialing…" : "Call Customer"}
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
