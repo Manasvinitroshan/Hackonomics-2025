@@ -891,3 +891,58 @@ button:hover {
 
 
 
+
+
+/* ─── SOCIAL BUTTONS ───────────────────────────────────────────────────── */
+.login-social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  /* center them under the form, matching your submit width */
+  width: 100%;
+  max-width: 320px;
+  margin: 0.5rem auto;
+}
+
+.login-social-buttons .social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+/* Google brand button */
+.login-social-buttons .social-btn.google {
+  background-color: #4285F4;
+  color: #ffffff;
+}
+.login-social-buttons .social-btn.google svg {
+  /* force white icon (FcGoogle is multicolor, so we just center it) */
+  background: transparent;
+}
+
+/* GitHub brand button */
+.login-social-buttons .social-btn.github {
+  background-color: #24292E;
+  color: #ffffff;
+}
+.login-social-buttons .social-btn.github svg {
+  color: #ffffff;
+}
+
+/* hover states */
+.login-social-buttons .social-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+

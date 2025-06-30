@@ -1,7 +1,7 @@
 // backend/routes/post.ts
 
-import express from 'express';              // runtime import
-import type { Request, Response } from 'express';  // types only
+import express from 'express';
+import type { Request, Response } from 'express';
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -22,25 +22,29 @@ const router = express.Router();
 router.post('/', async (req: Request, res: Response) => {
   const { author, content } = req.body;
   if (!author || !content) {
-    res.status(400).json({ error: 'author & content required' });
-    return;
+    return res.status(400).json({ error: 'author & content required' });
   }
 
   const timestamp = new Date().toISOString();
   const newItem = {
-    postId:     uuidv4(),
+    postId:    uuidv4(),
     author,
     content,
     timestamp,
-    likedBy:    dynamoDb.createSet([] as string[]),
-    dislikedBy: dynamoDb.createSet([] as string[]),
-    replies:    [] as string[],
-    likes:      0,
-    dislikes:   0,
+    replies:   [] as string[],
+    likes:     0,
+    dislikes:  0,
+    // removed likedBy/dislikedBy here
   };
 
   try {
-    await dynamoDb.put({ TableName: TABLE_NAME, Item: newItem }).promise();
+    await dynamoDb
+      .put({
+        TableName: TABLE_NAME,
+        Item:      newItem
+      })
+      .promise();
+
     res.status(201).json(newItem);
   } catch (err) {
     console.error('Error saving post:', err);
@@ -55,6 +59,7 @@ router.get('/', async (_req, res) => {
   try {
     const data = await dynamoDb.scan({ TableName: TABLE_NAME }).promise();
     const items = (data.Items ?? []) as any[];
+    // sort newest-first
     items.sort((a, b) => (a.timestamp < b.timestamp ? 1 : -1));
     res.json(items);
   } catch (err) {
@@ -70,8 +75,7 @@ router.patch('/:id/like', async (req: Request, res: Response) => {
   const postId = req.params.id;
   const { timestamp, user } = req.body;
   if (!timestamp || !user) {
-    res.status(400).json({ error: 'timestamp & user required' });
-    return;
+    return res.status(400).json({ error: 'timestamp & user required' });
   }
 
   const userSet = dynamoDb.createSet([user]);
@@ -80,6 +84,7 @@ router.patch('/:id/like', async (req: Request, res: Response) => {
       .update({
         TableName: TABLE_NAME,
         Key:       { postId, timestamp },
+        // add this user to likedBy, remove from dislikedBy
         UpdateExpression: 'ADD likedBy :u DELETE dislikedBy :u',
         ExpressionAttributeValues: { ':u': userSet },
         ReturnValues: 'ALL_NEW',
@@ -103,8 +108,7 @@ router.patch('/:id/dislike', async (req: Request, res: Response) => {
   const postId = req.params.id;
   const { timestamp, user } = req.body;
   if (!timestamp || !user) {
-    res.status(400).json({ error: 'timestamp & user required' });
-    return;
+    return res.status(400).json({ error: 'timestamp & user required' });
   }
 
   const userSet = dynamoDb.createSet([user]);
@@ -113,6 +117,7 @@ router.patch('/:id/dislike', async (req: Request, res: Response) => {
       .update({
         TableName: TABLE_NAME,
         Key:       { postId, timestamp },
+        // add to dislikedBy, remove from likedBy
         UpdateExpression: 'ADD dislikedBy :u DELETE likedBy :u',
         ExpressionAttributeValues: { ':u': userSet },
         ReturnValues: 'ALL_NEW',
@@ -136,8 +141,7 @@ router.patch('/:id/reply', async (req: Request, res: Response) => {
   const postId = req.params.id;
   const { timestamp, reply } = req.body;
   if (!timestamp || !reply) {
-    res.status(400).json({ error: 'timestamp & reply required' });
-    return;
+    return res.status(400).json({ error: 'timestamp & reply required' });
   }
 
   try {

@@ -1,0 +1,77 @@
+/* src/styles/simulation.css */
+
+/* ─── Page Wrapper ───────────────────────────────────────────────── */
+.simulation-page {
+    background: transparent;          /* let the dark app-shell show */
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 2rem);
+    color: #f3f4f6;                   /* off-white text */
+  }
+  
+  /* ─── Centered Container ─────────────────────────────────────────── */
+  .simulation-container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  
+  /* ─── Page Header ────────────────────────────────────────────────── */
+  .simulation-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.25rem;
+    color: #f3f4f6;                   /* off-white */
+  }
+  
+  .simulation-subtext {
+    font-size: 1rem;
+    color: #9ca3af;                   /* muted gray */
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  /* ─── Section Heading ────────────────────────────────────────────── */
+  .simulation-section {
+    margin-bottom: 2rem;
+  }
+  
+  .simulation-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #f3f4f6;                   /* off-white */
+    margin-bottom: 1rem;
+  }
+  
+  /* ─── Grid of Cards ─────────────────────────────────────────────── */
+  .simulation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  
+  /* ─── Card Button ───────────────────────────────────────────────── */
+  .simulation-button {
+    background: #ffffff;              /* white card */
+    border-left: 4px solid #4f46e5;   /* purple accent */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    color: #111827;                   /* dark text */
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  
+  .simulation-button:hover {
+    background: #f9fafb;              /* very light gray */
+    transform: translateY(-2px);
+  }
+  
+  .simulation-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.3);
+  }
+  

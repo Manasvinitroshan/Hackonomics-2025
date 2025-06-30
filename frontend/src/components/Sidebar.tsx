@@ -1,6 +1,8 @@
-// src/components/Sidebar.jsx
+// src/components/Sidebar.tsx
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
+  FaRocket,
   FaTachometerAlt,
   FaBook,
   FaCogs,
@@ -11,35 +13,42 @@ import {
 import '../styles/sidebar.css';
 
 const navItems = [
-  { name: 'Dashboard',  icon: <FaTachometerAlt /> },
-  { name: 'Learn',      icon: <FaBook /> },
-  { name: 'Simulation', icon: <FaCogs /> },
-  { name: 'Forum',      icon: <FaComments /> },
-  { name: 'Events',     icon: <FaCalendarAlt /> },
-  { name: 'AI CFO',     icon: <FaWallet /> },  // switched to a wallet icon
+  { name: 'Dashboard',  icon: <FaTachometerAlt />, path: '/' },
+  { name: 'Learn',      icon: <FaBook />,           path: '/learn' },
+  { name: 'Simulation', icon: <FaCogs />,           path: '/simulation' },
+  { name: 'Forum',      icon: <FaComments />,       path: '/forum' },
+  { name: 'Events',     icon: <FaCalendarAlt />,    path: '/events' },
+  { name: 'AI CFO',     icon: <FaWallet />,         path: '/ai-cfo' },
 ];
 
-export default function Sidebar({ onTabChange, activeTab }) {
+export default function Sidebar(): JSX.Element {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   return (
     <aside className="sidebar-container">
-      {/* ─── “🚀 Foundr” HEADER ─────────────────────────────── */}
       <div className="sidebar-header">
-        <span className="sidebar-logo-emoji">🚀</span>
+        <FaRocket className="sidebar-logo-icon" />
         <span className="sidebar-logo-text">Foundr</span>
       </div>
 
-      {/* ─── FLAT LIST OF NAV ITEMS ────────────────────────── */}
       <nav className="sidebar-nav">
-        {navItems.map(({ name, icon }) => (
-          <button
-            key={name}
-            onClick={() => onTabChange(name)}
-            className={`sidebar-link ${activeTab === name ? 'active' : ''}`}
-          >
-            <span className="sidebar-icon">{icon}</span>
-            <span className="sidebar-link-text">{name}</span>
-          </button>
-        ))}
+        {navItems.map(item => {
+          const isActive = item.path === '/'
+            ? pathname === '/'
+            : pathname.startsWith(item.path);
+
+          return (
+            <button
+              key={item.name}
+              className={`sidebar-link ${isActive ? 'active' : ''}`}
+              onClick={() => navigate(item.path)}
+            >
+              <span className="sidebar-icon">{item.icon}</span>
+              <span className="sidebar-link-text">{item.name}</span>
+            </button>
+          );
+        })}
       </nav>
     </aside>
   );

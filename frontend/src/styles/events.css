@@ -1,280 +1,283 @@
 .year-nav {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    align-items: center;
-    font-size: 1.25rem;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 2rem 0;
+}
+
+.year-nav button {
+  display: block;
+  margin: 0 auto 1.5rem;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.calendar-year-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.month-container {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.month-container h3 {
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+}
+
+.calendar-day-name {
+  font-size: 0.75rem;
+  text-align: center;
+  font-weight: bold;
+  color: #6b7280;
+}
+
+.calendar-cell {
+  height: 2rem;
+  text-align: center;
+  line-height: 2rem;
+  font-size: 0.875rem;
+  color: #111827;
+  background: #f9fafb;
+  border-radius: 0.375rem;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.calendar-cell:hover {
+  background-color: #e0e7ff;
+  font-weight: 500;
+  transform: scale(1.05);
+}
+
+.has-event {
+  background-color: #8781f9;
+  font-weight: 600;
+}
+
+.selected-date {
+  background-color: #342d4e !important;
+  color: white;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.modal h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.modal input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+
+
+.dashboard-wrapper {
+  width: 100%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header button {
+  display: block;
+    margin: 0 auto 1.5rem;
+    background: var(--primary);
+    color: #ffffff;
     font-weight: 600;
-    margin: 2rem 0;
-  }
-  
-  .year-nav button {
-    background: linear-gradient(90deg, #09080d, #342d4e);
+    padding: 0.75rem 1.5rem;
     border: none;
-    color: white;
-    font-weight: bold;
-    font-size: 1rem;
     border-radius: 0.5rem;
-    padding: 0.4rem 1rem;
     cursor: pointer;
-  }
-  
-  .calendar-year-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-  }
-  
-  .month-container {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    padding: 1rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  }
-  
-  .month-container h3 {
-    text-align: center;
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-  }
-  
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 0.25rem;
-  }
-  
-  .calendar-day-name {
-    font-size: 0.75rem;
-    text-align: center;
-    font-weight: bold;
-    color: #6b7280;
-  }
-  
-  .calendar-cell {
-    height: 2rem;
-    text-align: center;
-    line-height: 2rem;
-    font-size: 0.875rem;
-    color: #111827;
-    background: #f9fafb;
-    border-radius: 0.375rem;
-    transition: 0.2s ease;
-    cursor: pointer;
-  }
-  
-  .calendar-cell:hover {
-    background-color: #e0e7ff;
-    font-weight: 500;
-    transform: scale(1.05);
-  }
-  
-  .has-event {
-    background-color: #c7d2fe;
-    font-weight: 600;
-  }
-  
-  .selected-date {
-    background-color: #342d4e !important;
-    color: white;
-  }
-  
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-  }
-  
-  .modal {
-    background: white;
-    padding: 2rem;
-    border-radius: 0.75rem;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-  }
-  
-  .modal h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  
-  .modal input {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    margin-bottom: 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-  }
-  
-  
-  
-  .dashboard-wrapper {
-    width: 100%;
-    max-width: 1280px;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-  
-  .dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .dashboard-header button {
-    padding: 0.5rem 1rem;
-    background: linear-gradient(90deg, #09080d, #342d4e);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  
-  .dashboard-content {
-    display: grid;
-    grid-template-columns: 2fr 1.2fr;
-    gap: 2rem;
-  }
-  
-  .event-list-pane {
-    background: white;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 0 8px rgba(0,0,0,0.05);
-  }
-  
-  .event-card {
-    border: 1px solid #e5e7eb;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border-radius: 0.5rem;
-    background-color: #f9fafb;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .event-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  }
-  
-  .event-card h4 {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .delete-btn {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 0.4rem 0.75rem;
-    border-radius: 0.375rem;
-    margin-top: 0.5rem;
-    cursor: pointer;
-  }
-  
-  .calendar-title {
-    text-align: center;
-    margin-top: 2rem;
-  }
-  
-  .calendar-title h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin-bottom: 0.25rem;
-  }
-  
-  .calendar-subtext {
-    font-size: 0.875rem;
-    color: #6b7280;
-  }
+    transition: transform 0.2s ease, background 0.2s ease;
+}
 
-  .page {
-    
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: white;
-    padding: 4rem;
-    font-family: 'Inter', sans-serif;
-    animation: fadeIn 0.5s ease-in;
-  }
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 2fr 1.2fr;
+  gap: 2rem;
+}
 
-  .events-side {
-    display: grid;
-    flex-direction: row;
-    margin-top: 5rem;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 2rem;
-    background: white;
-    border-radius: 0.75rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    min-height: 10px;
-  }
-  .events-side p {
-    margin-top: auto;
-    text-align: center;
-    font-size: 0.95rem;
-    align-items: center;
-    justify-content: center;
-    color: #6b7280;
-  }
+.event-list-pane {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 8px rgba(0,0,0,0.05);
+}
+
+.event-card {
+  border: 1px solid #e5e7eb;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.event-card h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.375rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.calendar-title {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.calendar-title h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.calendar-subtext {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.page {
   
+  background: var(--card-bg);
+  border-left: 4px solid var(--primary);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: 0 4px 12px var(--card-shadow);
+}
 
-  
-  .event-layout2 {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    width: 1280px;
-    max-width: 100%; /* Limit the width */
-    margin-top: 2rem;
-    justify-content: center;
-  }
+.events-side {
+  display: grid;
+  flex-direction: row;
+  margin-top: 5rem;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  min-height: 10px;
+}
+.events-side p {
+  margin-top: auto;
+  text-align: center;
+  font-size: 0.95rem;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
 
-  /* events.css */
+
+
+.event-layout2 {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  width: 1280px;
+  max-width: 100%; /* Limit the width */
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+/* events.css */
 
 /* 1) Base day cell */
 .calendar-cell {
-  background-color: #ffffff;  /* white bg */
-  color: #000000;             /* black text */
-  border-radius: 4px;
-  padding: 8px;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s;
+background-color: #ffffff;  /* white bg */
+color: #000000;             /* black text */
+border-radius: 4px;
+padding: 8px;
+text-align: center;
+cursor: pointer;
+user-select: none;
+transition: background-color 0.2s;
 }
 
 /* 2) Days with events */
 .calendar-cell.has-event {
-  background-color: #e0e0e0;  /* light grey */
-  color: #000000;             /* black text */
+background-color: #e0e0e0;  /* light grey */
+color: #000000;             /* black text */
 }
 
 /* 3) Currently selected day */
 .calendar-cell.selected-date {
-  background-color: #c0c0c0;  /* darker grey */
-  color: #000000;
+background-color: #c0c0c0;  /* darker grey */
+color: #000000;
 }
 
 /* 4) Month titles & weekday headers */
 .month-container h3,
 .calendar-day-name {
-  color: #000000;             /* force black */
-  margin: 4px 0;
-  font-weight: 500;
+color: #000000;             /* force black */
+margin: 4px 0;
+font-weight: 500;
 }
 
 /* 5) Toolbar & inline labels */
@@ -282,32 +285,32 @@
 .toolbar-controls span,
 .login-subtext,
 .calendar-title h2 {
-  color: #000000 !important;  /* override inline or other styles */
+color: #000000 !important;  /* override inline or other styles */
 }
 
 /* 6) Button hover states */
 .toolbar-controls button:hover,
 .delete-btn:hover {
-  opacity: 0.8;
+opacity: 0.8;
 }
 
 /* 7) Event‐card text */
 .event-card h4,
 .event-card p {
-  color: #000000;
+color: #000000;
 }
 
 /* 8) Modal inputs/buttons */
 .modal input,
 .modal button {
-  color: #000000;
+color: #000000;
 }
 
 /* (Optional) make sure your grid gaps are visible */
 .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 4px;
 }
 
 
@@ -317,37 +320,37 @@
 
 /* ─── GRID LAYOUT ───────────────────────────────────────────────────────────── */
 .calendar-year-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 24px;
 }
 
 .calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+display: grid;
+grid-template-columns: repeat(7, 1fr);
+gap: 4px;
 }
 
 /* ─── DAY CELLS ─────────────────────────────────────────────────────────────── */
 .calendar-cell {
-  background-color: #ffffff; /* white bg */
-  color: #000000;            /* black text */
-  border-radius: 4px;
-  padding: 8px;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s, color 0.2s;
+background-color: #ffffff; /* white bg */
+color: #000000;            /* black text */
+border-radius: 4px;
+padding: 8px;
+text-align: center;
+cursor: pointer;
+user-select: none;
+transition: background-color 0.2s, color 0.2s;
 }
 
 .calendar-cell.has-event {
-  background-color: #e0e0e0; /* light grey bg */
-  color: #000000;            /* black text */
+background-color: #e0e0e0; /* light grey bg */
+color: #000000;            /* black text */
 }
 
 .calendar-cell.selected-date {
-  background-color: #1f1b2e; /* dark bg */
-  color: #ffffff;            /* white text */
+background-color: #1f1b2e; /* dark bg */
+color: #ffffff;            /* white text */
 }
 
 /* ─── HEADERS & LABELS ────────────────────────────────────────────────────── */
@@ -357,36 +360,63 @@
 .login-subtext,
 .event-card h4,
 .event-card p {
-  color: #000000; /* force black text */
+color: #000000; /* force black text */
 }
 
 /* ─── TOOLBAR BUTTONS ───────────────────────────────────────────────────────── */
 .toolbar-controls button,
 .year-nav button,
 .delete-btn {
-  background-color: #1f1b2e; /* same dark bg */
-  color: #ffffff !important; /* white text */
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: opacity 0.2s;
+background-color: #1f1b2e; /* same dark bg */
+color: #ffffff !important; /* white text */
+border: none;
+border-radius: 4px;
+padding: 6px 12px;
+cursor: pointer;
+transition: opacity 0.2s;
 }
 
 .toolbar-controls button:hover,
 .year-nav button:hover,
 .delete-btn:hover {
-  opacity: 0.8;
+opacity: 0.8;
 }
 
 /* ─── MODAL ───────────────────────────────────────────────────────────────── */
 .modal,
 .modal input,
 .modal button {
-  color: #000000; /* black text inside modal */
+color: #000000; /* black text inside modal */
 }
 
 /* ─── MISC ────────────────────────────────────────────────────────────────── */
 .event-layout2 h3 {
-  color: #000000;
+color: #000000;
+}
+
+/* button container spacing */
+.event-card-buttons {
+display: flex;
+gap: 8px;
+align-items: center;
+}
+
+/* new “Email Me” button */
+.email-btn {
+background-color: #0066cc;
+color: #ffffff;
+border: none;
+border-radius: 4px;
+padding: 6px 12px;
+cursor: pointer;
+}
+.email-btn:hover {
+opacity: 0.9;
+}
+
+/* small status tag */
+.notify-status {
+font-size: 0.9rem;
+color: #333;
+margin-left: 4px;
 }

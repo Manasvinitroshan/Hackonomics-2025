@@ -5,8 +5,8 @@ import multerS3 from 'multer-s3';
 import dotenv from 'dotenv';
 import express from 'express';              // runtime import
 import type { Request, Response } from 'express';  // types only
-dotenv.config();
 
+dotenv.config();
 
 AWS.config.update({
   region: process.env.AWS_REGION!,
@@ -15,12 +15,14 @@ AWS.config.update({
 });
 
 const s3v2 = new AWS.S3();
+
+// Export the raw S3 client so we can list objects elsewhere
+export const s3 = s3v2;
+
 const upload = multer({
   storage: multerS3({
     s3: s3v2 as any,
     bucket: 'ai-cfo-docs',
-    // ↓ Remove the ACL entirely:
-    // acl: 'public-read',
     metadata: (_req, file, cb) => {
       cb(null, { fieldName: file.fieldname });
     },

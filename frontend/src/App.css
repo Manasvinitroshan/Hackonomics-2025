@@ -180,3 +180,51 @@ li {
 .flex { display: flex; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
+
+
+/* ─── Layout wrapper ───────────────────────── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Sidebar is in sidebar.css */
+
+/* Main content panel */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* Area below Topbar */
+.content-area {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+
+/* ─── Global Layout ───────────────────────── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.content-area {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}

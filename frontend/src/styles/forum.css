@@ -1,0 +1,147 @@
+/* src/styles/forum.css */
+
+/* ─── Theme variables ───────────────────────────────── */
+:root {
+    --primary:     #4f46e5;            /* darker indigo accent */
+    --card-bg:     #ffffff;            /* white cards */
+    --card-shadow: rgba(0, 0, 0, 0.08);/* soft drop shadow */
+  }
+  
+  /* ─── Page wrapper ───────────────────────────────── */
+  .login-page {
+    background: transparent;            /* let the dark app-shell show through */
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 2rem);
+    color: #f3f4f6;                     /* off-white for header text */
+  }
+  
+  /* ─── Card wrapper (new-post) ────────────────────── */
+  .login-card {
+    background: var(--card-bg);
+    border-left: 4px solid var(--primary);
+    border-radius: 0.75rem;
+    padding: 2rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
+  }
+  
+  .login-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #111827;                     /* dark on white */
+    margin-bottom: 0.5rem;
+  }
+  .login-subtext {
+    font-size: 1rem;
+    color: #6b7280;                     /* medium-grey */
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* ─── New-post editor ─────────────────────────────── */
+  .post-editor {
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    color: #111827;
+  }
+  
+  /* ─── Post button ─────────────────────────────────── */
+  .login-form button {
+    display: block;
+    margin: 0 auto 1.5rem;
+    background: var(--primary);
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+  .login-form button:hover {
+    background: #3730a3;
+    transform: translateY(-2px);
+  }
+  
+  /* ─── Divider ─────────────────────────────────────── */
+  .login-divider span {
+    color: #6b7280;
+    font-style: italic;
+  }
+  
+  /* ─── Each Forum Post ─────────────────────────────── */
+  .forum-post {
+    background: var(--card-bg);
+    border-left: 4px solid var(--primary);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
+    margin-bottom: 1.5rem;
+    color: #111827;
+  }
+  
+  .forum-post .meta {
+    display: flex;
+    justify-content: space-between;
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+  .forum-post .author {
+    font-weight: 600;
+    color: #111827;
+  }
+  
+  .forum-post .content {
+    font-size: 1rem;
+    background: #f3f4f6;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    color: #111827;
+  }
+  
+  .forum-post .actions button {
+    background: var(--card-bg);
+    border-left: 4px solid var(--primary);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+    color: #111827;
+  }
+  .forum-post .actions button:hover {
+    background: #f9fafb;
+    transform: translateY(-1px);
+  }
+  
+  .replies {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 3px solid #e5e7eb;
+  }
+  .replies div {
+    background: #ffffff;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #374151;
+  }
+  
+  .forum-post .post-editor {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .forum-post button {
+    background: var(--primary);
+    color: white;
+  }
+  .forum-post button:hover {
+    background: #3730a3;
+  }
+  

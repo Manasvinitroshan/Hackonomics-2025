@@ -1,4 +1,3 @@
-// src/pages/ai-cfo/AiCFO.tsx
 import React, {
   useState,
   useRef,
@@ -9,33 +8,56 @@ import React, {
 import { uploadFileToS3 } from "/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/upload.ts";
 import { extractText }    from "/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/extract.ts";
 import { askQuestion }    from "/Users/manassingh/LeanFoundr/frontend/src/pages/ai-cfo/services/ask.ts";
-import "/Users/manassingh/LeanFoundr/frontend/src/styles/aifcfo.css";
+import { FaFileUpload } from "react-icons/fa";
+import { IoMdSend } from "react-icons/io";
+
+
+import "../styles/aifcfo.css";
 
 type Message = { from: "user" | "ai"; text: string };
 
 export default function AiCFO() {
-  const [file, setFile]                   = useState<File | null>(null);
-  const [contextText, setContextText]     = useState<string>("");
-  const [messages, setMessages]           = useState<Message[]>([]);
-  const [question, setQuestion]           = useState<string>("");
-  const [callTo, setCallTo]               = useState<string>("");
-  const [status, setStatus]               = useState<string>("");
-  const [loading, setLoading]             = useState<boolean>(false);
-  const chatEndRef                        = useRef<HTMLDivElement>(null);
+  const [file, setFile]               = useState<File | null>(null);
+  const [fileKey, setFileKey]         = useState<string>("");
+  const [contextText, setContextText] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>([
+    { from: "ai", text: "Hey, how can I help you with your financial documents?" }
+  ]);
+  
+  const [question, setQuestion]       = useState<string>("");
+  const [status, setStatus]           = useState<string>("");
+  const [loading, setLoading]         = useState<boolean>(false);
+  const [phone, setPhone]             = useState<string>("");
+  const chatEndRef                    = useRef<HTMLDivElement>(null);
+  
+
+  // Pull phone from Cognito ID token
+  useEffect(() => {
+    const token = localStorage.getItem("idToken");
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        if (payload.phone_number) {
+          setPhone(payload.phone_number);
+        }
+      } catch {
+        console.error("Invalid token");
+      }
+    }
+  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Handle PDF selection
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFile(e.target.files?.[0] ?? null);
+    setFileKey("");
     setStatus("");
     setMessages([]);
     setContextText("");
   };
 
-  // Upload and extract text
   const handleUploadAndExtract = async () => {
     if (!file) {
       setStatus("❗ No file selected.");
@@ -46,13 +68,14 @@ export default function AiCFO() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const { key } = await uploadFileToS3(formData);
+      const { key }  = await uploadFileToS3(formData);
+      setFileKey(key);
 
       setStatus("Extracting text…");
       const text = await extractText("ai-cfo-docs", key);
 
       setContextText(text);
-      setMessages([{ from: "ai", text: `✅ Extracted ${text.length} characters.` }]);
+      setMessages([{ from: "ai", text: "How can I help you?" }]);
       setStatus("Ready to ask questions.");
     } catch (err: any) {
       const msg = err.response?.data?.error || err.message || "Unknown error";
@@ -63,7 +86,6 @@ export default function AiCFO() {
     }
   };
 
-  // Send a question to the RAG endpoint
   const handleSendQuestion = async (e: FormEvent) => {
     e.preventDefault();
     if (!question.trim()) {
@@ -87,26 +109,22 @@ export default function AiCFO() {
     }
   };
 
-  // Place a phone call via Retell
   const handleCallCustomer = async () => {
-    if (!callTo.trim()) {
-      setStatus("❗ Please enter a phone number.");
+    if (!phone) {
+      setStatus("❗ No phone number available.");
       return;
     }
     setLoading(true);
     setStatus("📞 Dialing…");
     try {
-      const res = await fetch("/api/call", {
+      const resp = await fetch("/api/call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ to: callTo.trim() }),
+        body: JSON.stringify({ to: phone, key: fileKey || undefined }),
       });
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `HTTP ${res.status}`);
-      }
-      const { call_id } = await res.json();
-      setStatus(`📞 Call started (ID: ${call_id})`);
+      const data = await resp.json();
+      if (!resp.ok) throw new Error(data.error || "Call failed");
+      setStatus(`📞 Call started (ID: ${data.call_id})`);
     } catch (err: any) {
       setStatus(`❌ ${err.message}`);
     } finally {
@@ -115,96 +133,74 @@ export default function AiCFO() {
   };
 
   return (
-    <div className="ai-cfo-container">
-      <h2>📄 AI CFO</h2>
-
-      {/* PDF Upload Section */}
-      <div className="upload-section">
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={handleFileChange}
-          disabled={loading || Boolean(contextText)}
-        />
-        <button
-          onClick={handleUploadAndExtract}
-          disabled={!file || loading || Boolean(contextText)}
-        >
-          {loading && !contextText ? "Uploading…" : "Upload & Extract"}
-        </button>
+    <div className="ai-cfo-page">
+      <div className="ai-cfo-header">
+        <h2>AI CFO</h2>
+        <p className="ai-cfo-subtitle">
+          Instantly turn your PDFs into actionable financial insights.
+        </p>
       </div>
 
-      {/* Status */}
-      {status && (
-        <div
-          className="status"
-          style={{ color: status.startsWith("❌") ? "red" : undefined }}
-        >
-          <em>{status}</em>
+      <div className="ai-cfo-container">
+        <div className="upload-section">
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            disabled={loading || Boolean(contextText)}
+          />
+          <button
+            onClick={handleUploadAndExtract}
+            disabled={!file || loading || Boolean(contextText)}
+          >
+            { <FaFileUpload /> }
+          </button>
         </div>
-      )}
 
-      {/* Chat & Call UI */}
-      {contextText && (
-        <>
-          <h3>🤖 Ask Questions</h3>
-          <form onSubmit={handleSendQuestion} className="chat-input">
-            <input
-              type="text"
-              placeholder="Type your question here…"
-              value={question}
-              onChange={e => setQuestion(e.target.value)}
-              disabled={loading}
-            />
-            <button type="submit" disabled={!question.trim() || loading}>
-              {loading ? "Thinking…" : "Send"}
-            </button>
-          </form>
+        {status && (
+          <div className="status">
+            <em>{status}</em>
+          </div>
+        )}
 
-          <div className="chat-window">
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`message ${msg.from}`}>
-                <div className={`bubble ${msg.from}`}>
-                  <strong>{msg.from === "user" ? "You:" : "AI:"}</strong> {msg.text}
-                </div>
+        {/* Chat window remains unchanged */}
+        <div className="chat-window">
+          {messages.map((msg, idx) => (
+            <div key={idx} className={`message ${msg.from}`}>
+              <div className={`bubble ${msg.from}`}>
+                <strong>{msg.from === 'user' ? 'You:' : 'AI:'}</strong> {msg.text}
               </div>
-            ))}
-            <div ref={chatEndRef} />
-          </div>
+            </div>
+          ))}
+          <div ref={chatEndRef} />
+        </div>
+        <form onSubmit={handleSendQuestion} className="chat-input">
+          <input
+            type="text"
+            placeholder="Type your question…"
+            value={question}
+            onChange={e => setQuestion(e.target.value)}
+            disabled={loading}
+          />
+          <button type="submit" disabled={!question.trim() || loading}>
+          <IoMdSend />
 
-          <h3>📞 Call Customer</h3>
-          <div style={{ textAlign: "center", margin: "1rem 0" }}>
-            <input
-              type="tel"
-              placeholder="Customer number (+1XXXXXXXXXX)"
-              value={callTo}
-              onChange={e => setCallTo(e.target.value)}
-              disabled={loading}
-              style={{
-                padding: "0.5rem",
-                borderRadius: 4,
-                border: "1px solid #ccc",
-                width: "60%",
-                marginRight: "0.5rem",
-              }}
-            />
-            <button
-              onClick={handleCallCustomer}
-              disabled={!callTo.trim() || loading}
-              style={{
-                padding: "0.5rem 1rem",
-                borderRadius: 4,
-                border: "none",
-                backgroundColor: "#007bff",
-                color: "#fff",
-                cursor: !callTo.trim() || loading ? "not-allowed" : "pointer",
-              }}
-            >
-              {loading ? "Dialing…" : "Call Customer"}
-            </button>
+          </button>
+        </form>
+
+        {/* Centered Call Customer section */}
+        <div className="call-section">
+          <div className="phone-display">
+            
           </div>
-        </>
-      )}
+          <button
+            onClick={handleCallCustomer}
+            disabled={!phone || loading}
+          >
+            {loading ? "Dialing…" : "Consult AI CFO"}
+          </button>
+        </div>
+      </div>
     </div>
-  );
+);
 }

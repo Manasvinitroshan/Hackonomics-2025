@@ -1,0 +1,82 @@
+/* src/styles/learn.css */
+
+/* ─── Theme variables ───────────────────────────────── */
+:root {
+    --primary:     #4f46e5;            /* darker indigo accent */
+    --card-bg:     #ffffff;            /* white cards */
+    --card-shadow: rgba(0, 0, 0, 0.08);/* soft drop shadow */
+  }
+  
+  /* ─── Page wrapper ───────────────────────────────── */
+  .learn-page {
+    background: transparent;            /* let the dark app-shell show through */
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 2rem);
+  }
+  
+  /* ─── Page header ───────────────────────────────── */
+  .learn-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #f3f4f6;                     /* white on black */
+  }
+  
+  .learn-subtext {
+    font-size: 1rem;
+    color: #9ca3af;                     /* light grey on black */
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  
+  /* ─── Grid of cards ───────────────────────────────── */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+  
+  /* ─── Individual card ─────────────────────────────── */
+  .module-card {
+    background: var(--card-bg);
+    border-left: 4px solid var(--primary);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px var(--card-shadow);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+    /* enforce true black text for everything inside */
+    color: #111827 !important;
+  }
+  
+  .module-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px var(--card-shadow);
+  }
+  
+  /* ─── Card title ──────────────────────────────────── */
+  .module-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  
+    /* explicit even though parent sets it */
+    color: #111827 !important;
+  }
+  
+  /* ─── Card description ────────────────────────────── */
+  .module-desc {
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+    color: #4b5563;                      /* dark grey for body text */
+  }
+  
+  /* ─── Card score ──────────────────────────────────── */
+  .module-score {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--primary);
+  }
+  

@@ -1,103 +1,156 @@
-/* ======================================= */
-/*               sidebar.css               */
-/* ======================================= */
-
-/* ─── 1) Container ──────────────────────────────── */
 .sidebar-container {
   width: 240px;
-  background-color: #111827;   /* very dark/navy */
-  color: #f3f4f6;              /* off-white text */
-  padding-top: 2.5rem;
+  background-color: #111827;
+  color: #f3f4f6;
+  padding-top: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   min-height: 100vh;
   position: sticky;
   top: 0;
   font-family: 'Inter', sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center;        /* centers “Foundr” and nav items horizontally */
+  align-items: flex-start;      /* nav items start at left edge */
 }
 
-/* ─── 2) “🚀 Foundr” HEADER ───────────────────────── */
+/* ─── Header “Foundr” ───────────────────────────── */
 .sidebar-header {
+  align-self: center;           /* center just the header */
   display: flex;
   align-items: center;
-  justify-content: center;    /* center the icon + text */
-  margin-bottom: 2rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
-.sidebar-logo-emoji {
-  font-size: 1.5rem;
+.sidebar-logo-icon {
+  font-size: 1.75rem;
+  color: #6366f1;               /* a subtle accent color */
   margin-right: 0.5rem;
-  color: #111827;            /* subtle indigo accent */
 }
 
 .sidebar-logo-text {
-  font-size: 1.5rem;          /* slightly larger to balance the emoji */
-  font-weight: 700;
-  color: #f3f4f6;             /* off-white */
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f3f4f6;
 }
 
-/* ─── 3) NAV LINKS (flat list) ────────────────────── */
+/* ─── Navigation Links ─────────────────────────── */
 .sidebar-nav {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0 0.5rem;          /* horizontal padding for alignment */
+  margin-top: 0.5rem;
 }
 
 .sidebar-link {
+  width: 100%;
   background: none;
   border: none;
-  color: #f3f4f6;             /* off-white */
+  color: inherit;
   font-size: 1rem;
   text-align: left;
-  padding: 0.75rem 1rem;      /* vertical 0.75, horizontal 1 */
+  padding: 0.75rem 0;
+  padding-left: 1rem;
   border-radius: 0.5rem;
   transition: background-color 0.2s ease;
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-bottom: 0.25rem;     /* small gap between each link */
+  margin-bottom: 0.5rem;
 }
 
 .sidebar-link:hover {
-  background-color: #1f1b2e;  /* slightly lighten nav on hover */
+  background-color: #27272a;    /* slightly lighter on hover */
 }
 
 .sidebar-link.active {
-  background-color: #2d2d2e;  /* subtle dark-gray when active */
-  color: #f3f4f6;             /* keep label off-white */
-  font-weight: 600;           /* slightly bolder */
+  background-color: #27272a;   /* stronger contrast for “active” */
+  font-weight: 600;
 }
 
-/* ─── 4) ICON + TEXT INSIDE BUTTON ────────────────── */
 .sidebar-icon {
   margin-right: 0.75rem;
   font-size: 1.2rem;
   flex-shrink: 0;
-  color: #f3f4f6;             /* ensure icon is off-white */
 }
 
 .sidebar-link-text {
   flex-shrink: 0;
-  color: inherit;             /* same as surrounding text */
 }
 
-/* ─── 5) (Optional) fade-in support ───────────────── */
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to   { opacity: 1; transform: scale(1); }
+
+.sidebar-container {
+  width: 240px;
+  background-color: #111827;
+  color: #f3f4f6;
+  padding-top: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.content-fade {
-  opacity: 0;
-  transform: translateY(10px);
-  animation: fadeSlideIn 0.6s ease-in-out forwards;
+.sidebar-header {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
-@keyframes fadeSlideIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.sidebar-logo-icon {
+  font-size: 1.75rem;
+  color: #6366f1;
+  margin-right: 0.5rem;
+}
+
+.sidebar-logo-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+.sidebar-link {
+  width: 100%;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1rem;
+  text-align: left;
+  padding: 0.75rem 0;
+  padding-left: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #27272a;
+}
+
+.sidebar-link.active {
+  background-color: #27272a;
+  font-weight: 600;
+}
+
+.sidebar-icon {
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.sidebar-link-text {
+  flex-shrink: 0;
 }

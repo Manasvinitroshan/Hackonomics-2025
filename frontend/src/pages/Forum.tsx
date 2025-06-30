@@ -2,48 +2,63 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/login.css';
+import '/Users/manassingh/LeanFoundr/frontend/src/styles/forum.css';
 import { getCurrentUsername } from '../utils/cognito';
+import { AiOutlineLike } from 'react-icons/ai';
 
 interface Post {
-  postId: string;
-  author: string;
-  content: string;
+  postId:    string;
+  author:    string;
+  content:   string;
   timestamp: string;
-  likes: number;
-  dislikes: number;
-  replies: string[];
+  likes:     number;
+  dislikes:  number;
+  replies:   string[];  // each entry is now "Alice: This is my reply"
 }
 
 type Vote = 'like' | 'dislike';
 
 export default function Forum() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [newPostText, setNewPostText] = useState('');
-  const [isPosting, setIsPosting] = useState(false);
-  const [voteStatus, setVoteStatus] = useState<Record<string, Vote>>({});
-  const [replyText, setReplyText] = useState<Record<string, string>>({});
+  const rawUsername = getCurrentUsername() || 'Anonymous';
 
-  const currentUsername = getCurrentUsername() || 'Anonymous';
-
-  // 1) Fetch posts on mount
+  // pull firstName from Cognito idToken
+  const [firstName, setFirstName] = useState<string>('');
   useEffect(() => {
-    axios
-      .get<Post[]>('http://localhost:3001/api/posts')
+    const token = localStorage.getItem('idToken');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setFirstName(payload.given_name || payload.name || '');
+      } catch {
+        console.error('Failed to decode idToken');
+      }
+    }
+  }, []);
+  const currentUser = firstName || rawUsername;
+
+  // forum state
+  const [posts, setPosts]             = useState<Post[]>([]);
+  const [newPostText, setNewPostText] = useState('');
+  const [isPosting, setIsPosting]     = useState(false);
+  const [voteStatus, setVoteStatus]   = useState<Record<string, Vote>>({});
+  const [replyText, setReplyText]     = useState<Record<string, string>>({});
+
+  // fetch posts
+  useEffect(() => {
+    axios.get<Post[]>('http://localhost:3001/api/posts')
       .then(res => setPosts(res.data))
       .catch(console.error);
   }, []);
 
-  // 2) Create new post
+  // new post
   const handlePost = () => {
     if (!newPostText.trim()) return;
     setIsPosting(true);
 
-    axios
-      .post<Post>('http://localhost:3001/api/posts', {
-        author: currentUsername,
-        content: newPostText.trim(),
-      })
+    axios.post<Post>('http://localhost:3001/api/posts', {
+      author:  currentUser,
+      content: newPostText.trim(),
+    })
       .then(res => {
         setPosts(prev => [res.data, ...prev]);
         setNewPostText('');
@@ -54,47 +69,45 @@ export default function Forum() {
       .finally(() => setIsPosting(false));
   };
 
-  // 3) Unified vote handler (calls backend with user + timestamp)
+  // like handler
   const handleVote = async (
-    postId: string,
+    postId:    string,
     timestamp: string,
-    vote: Vote
+    vote:      Vote
   ) => {
-    // prevent double‐voting
     if (voteStatus[postId] === vote) return;
-
     try {
       const res = await axios.patch<Post>(
         `http://localhost:3001/api/posts/${postId}/${vote}`,
-        { timestamp, user: currentUsername }
+        { timestamp, user: currentUser }
       );
-      // update post with backend’s counts
       setPosts(prev =>
         prev.map(p => (p.postId === postId ? res.data! : p))
       );
-      // record that we’ve now voted
       setVoteStatus(vs => ({ ...vs, [postId]: vote }));
     } catch (err) {
       console.error(`Failed to ${vote}`, err);
     }
   };
 
-  // 4) Reply handler (unchanged)
+  // reply submit
   const handleReply = async (postId: string, timestamp: string) => {
-    const text = replyText[postId]?.trim();
+    const text = (replyText[postId] || '').trim();
     if (!text) return;
+
+    // prefix with the replier’s name
+    const fullReply = `${currentUser}: ${text}`;
 
     try {
       const res = await axios.patch<Post>(
         `http://localhost:3001/api/posts/${postId}/reply`,
-        { timestamp, reply: text }
+        { timestamp, reply: fullReply }
       );
       setPosts(prev =>
         prev.map(p => (p.postId === postId ? res.data! : p))
       );
+      // clear textarea
       setReplyText(r => ({ ...r, [postId]: '' }));
-      const editor = document.getElementById(`reply-editor-${postId}`);
-      if (editor) (editor as HTMLElement).innerText = '';
     } catch (err) {
       console.error('Failed to send reply:', err);
     }
@@ -148,56 +161,84 @@ export default function Forum() {
 
               <div className="content">{post.content}</div>
 
-              <div className="actions">
+              {/* Centered Indigo Like Button */}
+              <div
+                className="actions"
+                style={{ display: 'flex', justifyContent: 'center', gap: '1rem' }}
+              >
                 <button
-                  disabled={voteStatus[post.postId] === 'like'}
                   onClick={() =>
                     handleVote(post.postId, post.timestamp, 'like')
                   }
-                  style={{ color: '#ffffff' }}
+                  disabled={voteStatus[post.postId] === 'like'}
+                  style={{
+                    backgroundColor: '#4F46E5',
+                    border: 'none',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: '#ffffff',
+                    cursor: voteStatus[post.postId] === 'like'
+                      ? 'not-allowed'
+                      : 'pointer',
+                    opacity: voteStatus[post.postId] === 'like' ? 0.6 : 1,
+                  }}
                 >
-                  👍 {post.likes}
-                </button>
-                <button
-                  disabled={voteStatus[post.postId] === 'dislike'}
-                  onClick={() =>
-                    handleVote(post.postId, post.timestamp, 'dislike')
-                  }
-                  style={{ color: '#ffffff' }}
-                >
-                  👎 {post.dislikes}
+                  <AiOutlineLike size={18} style={{ marginRight: 6 }} />
+                  {post.likes}
                 </button>
               </div>
 
+              {/* existing replies, showing author and text */}
               {post.replies.length > 0 && (
                 <div className="replies">
-                  {post.replies.map((reply, i) => (
-                    <div key={i}>
-                      <strong>Reply:</strong> {reply}
-                    </div>
-                  ))}
+                  {post.replies.map((reply, i) => {
+                    const [author, ...rest] = reply.split(': ');
+                    const replyBody = rest.join(': ');
+                    return (
+                      <div key={i}>
+                        <strong>{author}:</strong> {replyBody}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
+              {/* reply textarea always visible */}
               <div style={{ marginTop: '1rem' }}>
-                <div
-                  id={`reply-editor-${post.postId}`}
-                  contentEditable
+                <textarea
                   className="post-editor"
-                  data-placeholder="Write a reply..."
-                  suppressContentEditableWarning
-                  onInput={e =>
+                  placeholder="Write a reply..."
+                  value={replyText[post.postId] || ''}
+                  onChange={e =>
                     setReplyText(r => ({
                       ...r,
-                      [post.postId]: (e.currentTarget as HTMLElement).innerText,
+                      [post.postId]: e.target.value,
                     }))
                   }
+                  style={{
+                    width: '100%',
+                    minHeight: '60px',
+                    padding: '8px',
+                    borderRadius: '4px',
+                    border: '1px solid #ccc',
+                    fontFamily: 'inherit',
+                  }}
                 />
                 <button
                   onClick={() => handleReply(post.postId, post.timestamp)}
-                  style={{ color: '#ffffff' }}
+                  style={{
+                    marginTop: '0.5rem',
+                    backgroundColor: '#4F46E5',
+                    border: 'none',
+                    padding: '6px 10px',
+                    borderRadius: '4px',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                  }}
                 >
-                  Reply
+                  Send Reply
                 </button>
               </div>
             </div>

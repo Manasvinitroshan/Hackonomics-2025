@@ -1,149 +1,255 @@
-/* AiCFO.css */
+/* ─── SHELL & HEADER ───────────────────────────────────────────────── */
+.ai-cfo-page {
+  background: transparent;       /* keep dark app-shell behind */
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.ai-cfo-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;                /* white on black */
+  margin-bottom: 0.5rem;
+}
+
+.ai-cfo-subtitle {
+  font-size: 1rem;
+  color: #9ca3af;                /* light grey on black */
+  margin-bottom: 2rem;
+}
+
+/* ─── WHITE CARD ───────────────────────────────────────────────────── */
+.ai-cfo-container {
+  background: #ffffff;
+  border-left: 4px solid #4f46e5;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  color: #111827;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ─── UPLOAD SECTION ────────────────────────────────────────────────── */
+.upload-section {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.upload-section input[type="file"] {
+  cursor: pointer;
+}
+
+.upload-section button {
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.upload-section button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.upload-section button:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+
+/* ─── STATUS MESSAGE ───────────────────────────────────────────────── */
+.status {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* ─── CHAT AREA ────────────────────────────────────────────────────── */
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.chat-input input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79,70,229,0.2);
+}
+
+.chat-input button {
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.chat-input button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chat-input button:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+
+/* ─── CHAT WINDOW ──────────────────────────────────────────────────── */
+.chat-window {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 0.75rem;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message.ai {
+  justify-content: flex-start;
+}
+
+.bubble {
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+.bubble.user {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.bubble.ai {
+  background: #f3f4f6;
+}
+
+/* ─── CALL SECTION ─────────────────────────────────────────────────── */
+.call-section {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.call-section input {
+  width: 60%;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.call-section button {
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.call-section button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.call-section button:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+
+
+/* ─── UPLOAD SECTION ────────────────────────────────────────────────── */
+.upload-section {
+  display: flex;
+  /* center on the card, but keep the file input and button baseline-aligned */
+  justify-content: center;
+  align-items: center;        /* ← add this */
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ─── CHAT ENTRY ROW ───────────────────────────────────────────────── */
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;        /* ← add this */
+  margin-bottom: 1rem;
+}
+
+
+/* ─── UPLOAD & CHAT ROWS ───────────────────────────────────────────────── */
+.upload-section,
+.chat-input {
+  display: flex;
+  align-items: stretch;   /* stretch children to full row height */
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;  /* for upload-section, you might want 1rem */
+}
+
+/* make the file-picker/text-input flex-grow */
+.upload-section input[type="file"],
+.chat-input input {
+  flex: 1;
+  /* keep your existing padding */
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d1d5db;
+  background: #111827;    /* if you still want that dark style */
+  color: #fff;
+}
+
+/* buttons will match row height automatically */
+.upload-section button,
+.chat-input button {
+  padding: 0 1rem;        /* only horizontal padding, no vertical */
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+}
+
+/* remove any hover LIFT so buttons don’t jump out of line */
+.upload-section button:not(:disabled):hover,
+.chat-input button:not(:disabled):hover {
+  transform: none;
+}
 
 .ai-cfo-container {
-    max-width: 700px;
-    margin: 2rem auto;
-    padding: 2.5rem;
-    background-color: #fff;
-    color: #111827;
-    font-family: "Segoe UI", Roboto, sans-serif;
-    border-radius: 0.75rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    display: flex;
-    flex-direction: column;
-    height: 80vh;             /* give it room to grow */
-  }
-  
-  .ai-cfo-container h2 {
-    text-align: center;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #342d4e;
-    margin-bottom: 0.5rem;
-  }
-  
-  .upload-section {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .upload-section input[type="file"] {
-    /* keep the default file-picker styling, or restyle if you wish */
-  }
-  
-  .upload-section button {
-    background: linear-gradient(90deg, #09080d, #342d4e);
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.875rem;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s ease;
-  }
-  
-  .upload-section button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .status {
-    text-align: center;
-    margin-bottom: 1rem;
-    font-style: italic;
-    color: inherit;
-  }
-  
-  /* make the chat area flex-grow so input sticks at bottom */
-  .chat-area {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    overflow: hidden;
-  }
-  
-  .chat-window {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 1rem;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .message {
-    display: flex;
-    margin-bottom: 1rem;
-  }
-  
-  .message.user {
-    justify-content: flex-end;
-  }
-  
-  .message.ai {
-    justify-content: flex-start;
-  }
-  
-  .bubble {
-    max-width: 70%;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    line-height: 1.4;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    color: #111827;
-  }
-  
-  .bubble.user {
-    background: #e0e7ff;
-    border-color: #c7d2fe;
-  }
-  
-  .bubble.ai {
-    background: #f3f4f6;
-  }
-  
-  .chat-input {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .chat-input input {
-    flex-grow: 1;
-    padding: 0.625rem 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.5rem;
-    font-size: 0.875rem;
-    outline: none;
-  }
-  
-  .chat-input input:focus {
-    border-color: #342d4e;
-    box-shadow: 0 0 0 2px rgba(52, 45, 78, 0.2);
-  }
-  
-  .chat-input button {
-    background: linear-gradient(90deg, #09080d, #342d4e);
-    color: #fff;
-    font-weight: 600;
-    font-size: 0.875rem;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s ease;
-  }
-  
-  .chat-input button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  
-  .chat-input button:hover:not(:disabled) {
-    transform: scale(1.02);
-  }
-  
+  transition: box-shadow 0.3s ease;
+}
+
+.ai-cfo-container:hover {
+  box-shadow: 0 4px 40px rgba(255, 255, 255, 0.1);
+}

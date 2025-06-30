@@ -1,0 +1,140 @@
+/* src/styles/module.css */
+
+/* ─── Page Wrapper ───────────────────────────────────────────────── */
+.module-page {
+    background: transparent;          /* let the app-shell color show */
+    padding: 2rem 1rem;
+    min-height: calc(100vh - 2rem);
+    color: #f3f4f6;                   /* off-white page text */
+  }
+  
+  /* ─── Inner Container ──────────────────────────────────────────────── */
+  .module-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* ─── Back Link ───────────────────────────────────────────────────── */
+  .back-button {
+    display: inline-block;
+    background: none;
+    border: none;
+    color: #f3f4f6;                   /* off-white */
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  .back-button:hover {
+    color: #4f46e5;                   /* darker indigo */
+    text-decoration: underline;
+  }
+  
+  /* ─── Module Title ────────────────────────────────────────────────── */
+  .module-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #f3f4f6;                   /* off-white */
+  }
+  
+  /* ─── Video Wrapper ───────────────────────────────────────────────── */
+  .video-wrapper {
+    position: relative;
+    padding-top: 56.25%;
+    margin-bottom: 2.5rem;
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  
+  /* ─── Quiz Container ──────────────────────────────────────────────── */
+  .quiz-container {
+    background: #ffffff;             /* white */
+    border-left: 4px solid #4f46e5;   /* darker indigo */
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    color: #111827;                   /* dark text inside quiz */
+  }
+  
+  /* Quiz Heading */
+  .quiz-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #111827;
+  }
+  
+  /* Questions */
+  .question-block {
+    margin-bottom: 1.5rem;
+  }
+  .question-text {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #111827;
+  }
+  
+  /* Options */
+  .option-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: #374151;
+  }
+  .option-label input {
+    margin-right: 0.5rem;
+  }
+  
+  /* Feedback */
+  .feedback {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+  .feedback.correct { color: #16a34a; }
+  .feedback.incorrect { color: #dc2626; }
+  
+  /* Submit Button */
+  .submit-button {
+    display: block;
+    margin: 1rem auto 0;
+    background: #4f46e5;             /* darker indigo */
+    color: #ffffff;                  /* white */
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .submit-button:hover {
+    background: #3730a3;              /* deep indigo */
+    transform: translateY(-2px);
+  }
+  
+  /* Score Text */
+  .score-text {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    color: #111827;
+  }
+  
+  /* Not Found */
+  .not-found {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #9ca3af;
+    margin-top: 4rem;
+  }
+  
