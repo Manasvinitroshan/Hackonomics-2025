@@ -2,7 +2,7 @@
 
 **Your 24/7 AI CFO for Startup Survival**
 
-Built at **Hackenomics 2025**, Foundr is an AI-powered financial co-pilot designed to help early-stage founders avoid common financial pitfalls and make smarter decisions around the clock—via chat or voice.
+Built at **Hackonomics 2025**, Foundr is an AI-powered financial co-pilot designed to help early-stage founders avoid common financial pitfalls and make smarter decisions around the clock—via chat or voice.
 
 ---
 
